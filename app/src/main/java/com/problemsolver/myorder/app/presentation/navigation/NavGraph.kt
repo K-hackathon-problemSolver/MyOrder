@@ -21,6 +21,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.problemsolver.myorder.R
 import com.problemsolver.myorder.app.presentation.SplashScreen
+import com.problemsolver.myorder.app.presentation.StoreList.StoreListScreen
 import kotlinx.coroutines.delay
 
 @Composable
@@ -40,7 +41,7 @@ fun NavGraph(
 
         // nav bar routes
         composable(route = Screen.StoreListScreen.route) {
-            Text("StoreListScreen", fontSize = 48.sp)
+            StoreListScreen(navController = navController)
         }
         composable(route = Screen.ProfileScreen.route) {
             Text("ProfileScreen", fontSize = 48.sp)
