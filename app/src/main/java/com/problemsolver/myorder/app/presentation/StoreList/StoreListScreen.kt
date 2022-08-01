@@ -26,25 +26,30 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.zIndex
+import androidx.navigation.NavController
+import androidx.navigation.compose.rememberNavController
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.problemsolver.myorder.R
 import com.problemsolver.myorder.ui.theme.MyOrderTheme
 
 @Composable
-fun StoreListScreen() {
+fun StoreListScreen(
+    navController : NavController
+) {
     val stores = listOf<String>("스윗케이크", "루미케이크", "루미케이크","루미케이크","루미케이크","루미케이크","루미케이크","루미케이크","루미케이크","루미케이크",)
 
     Column(
         modifier = Modifier
             .background(Color.White)
-            .padding(top = 20.dp, bottom = 60.dp)
+            .padding(top = 20.dp)
     ) {
         Box(modifier = Modifier
-            .padding(horizontal = 20.dp)
+            .padding(horizontal = 20.dp, vertical = 10.dp)
             .fillMaxWidth()) {
             locationSelector(modifier = Modifier.align(Alignment.CenterStart),{ /* TODO */})
 
+            // 임시로 처리
             Row(modifier = Modifier.align(Alignment.CenterEnd)) {
                 Icon(imageVector = Icons.Filled.AccountCircle, modifier = Modifier.size(30.dp), contentDescription = "profile")
                 Spacer(modifier = Modifier.size(10.dp))
@@ -101,7 +106,7 @@ fun locationSelector(
                 expanded = isDropDownMenuExpanded,
                 onDismissRequest = { isDropDownMenuExpanded = false },
             ) {
-                repeat(6) {
+                repeat(3) {
 
                     DropdownMenuItem(
                         modifier = Modifier.width(200.dp),
@@ -155,5 +160,5 @@ fun StoreItemImage(
 @Preview()
 @Composable
 fun PreviewStoreListScreen() {
-    StoreListScreen()
+    StoreListScreen(rememberNavController())
 }
