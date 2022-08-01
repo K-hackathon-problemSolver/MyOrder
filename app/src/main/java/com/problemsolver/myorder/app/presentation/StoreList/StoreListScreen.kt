@@ -10,8 +10,10 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.AccountCircle
 import androidx.compose.material.icons.filled.ArrowDropDownCircle
 import androidx.compose.material.icons.filled.KeyboardArrowDown
+import androidx.compose.material.icons.filled.Menu
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -34,10 +36,20 @@ fun StoreListScreen() {
     val stores = listOf<String>("스윗케이크", "루미케이크", "루미케이크","루미케이크","루미케이크","루미케이크","루미케이크","루미케이크","루미케이크","루미케이크",)
 
     Column(
-        modifier = Modifier.background(Color.White).padding(top = 20.dp, bottom = 60.dp)
+        modifier = Modifier
+            .background(Color.White)
+            .padding(top = 20.dp, bottom = 60.dp)
     ) {
-        Row(modifier = Modifier.padding(horizontal = 20.dp), horizontalArrangement = Arrangement.SpaceBetween) {
-            locationSelector({})
+        Box(modifier = Modifier
+            .padding(horizontal = 20.dp)
+            .fillMaxWidth()) {
+            locationSelector(modifier = Modifier.align(Alignment.CenterStart),{ /* TODO */})
+
+            Row(modifier = Modifier.align(Alignment.CenterEnd)) {
+                Icon(imageVector = Icons.Filled.AccountCircle, modifier = Modifier.size(30.dp), contentDescription = "profile")
+                Spacer(modifier = Modifier.size(10.dp))
+                Icon(imageVector = Icons.Default.Menu, modifier = Modifier.size(30.dp), contentDescription = "profile")
+            }
         }
         LazyVerticalGrid(
             columns = GridCells.Fixed(2),
@@ -56,13 +68,14 @@ fun StoreListScreen() {
 
 @Composable
 fun locationSelector(
+    modifier: Modifier = Modifier,
     onCheckedChange: () -> Unit
 ) {
     val categoryList = listOf("광안동", "가나동", "다라동")
     var isDropDownMenuExpanded by remember { mutableStateOf(false) }
     var selectedText by remember { mutableStateOf("지역 선택") }
 
-    Row() {
+    Row(modifier = modifier) {
         Text(
             text = selectedText,
             modifier = Modifier.align(Alignment.CenterVertically),
@@ -78,7 +91,9 @@ fun locationSelector(
             Icon(
                 Icons.Default.KeyboardArrowDown,
                 contentDescription = "arrow down",
-                modifier = Modifier.size(30.dp).clickable{ isDropDownMenuExpanded = true }
+                modifier = Modifier
+                    .size(30.dp)
+                    .clickable { isDropDownMenuExpanded = true }
             )
 
             DropdownMenu(
