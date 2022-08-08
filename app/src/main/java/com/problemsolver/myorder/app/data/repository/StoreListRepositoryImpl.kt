@@ -11,6 +11,6 @@ class StoreListRepositoryImpl @Inject constructor(
 	private val api: StoreListApi
 ): StoreListRepository {
 	override suspend fun getStoreList(storeListBody: StoreListBodyDTO): Response<List<StoreDTO>> {
-		return api.getStoreList(StoreListBodyDTO("SUYUNG", 0, 10))
+		return api.getStoreList(storeListBody)
 	}
 }
