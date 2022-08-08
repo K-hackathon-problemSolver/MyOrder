@@ -8,3 +8,9 @@ data class StoreListState(
 	val storeList: List<StoreDTO> = emptyList(),
 	val error: String = ""
 )
+
+sealed class LocationState(val location: String) {
+	object SUYUNG: LocationState("SUYUNG")
+	object GUMJUNG: LocationState("GUMJUNG")
+	object DONGLAE: LocationState("DONGLAE")
+}

@@ -14,10 +14,10 @@ import javax.inject.Inject
 class GetStoreList @Inject constructor(
 	private val repository: StoreListRepository
 ) {
-	operator fun invoke(): Flow<Resource<List<StoreDTO>>> = flow {
+	operator fun invoke(location: String, offset: Int, limit: Int): Flow<Resource<List<StoreDTO>>> = flow {
 		try {
 			val response = repository.getStoreList(
-				StoreListBodyDTO("SUYUNG", 0, 10) // hard coded for test
+				StoreListBodyDTO(location, offset, limit)
 			)
 			emit(Resource.Loading())
 			emit(Resource.Success(response.body()!!))
