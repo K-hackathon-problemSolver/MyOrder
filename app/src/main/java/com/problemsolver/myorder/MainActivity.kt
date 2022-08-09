@@ -19,6 +19,8 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent { //MyOrderApp()
-        CustomerOCDScreen()}
+            CustomerOCDScreen()
+            //StoreDetailScreen()
+        }
     }
 }

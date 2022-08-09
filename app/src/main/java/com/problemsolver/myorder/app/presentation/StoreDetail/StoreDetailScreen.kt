@@ -42,6 +42,7 @@ fun StoreDetailScreen() {
 			Column() {
 				StoreDetailMainPic()
 				StoreDetailDescription()
+				Spacer(modifier = Modifier.height(10.dp))
 				DevideLine()
 				StoreDetailList()
 
