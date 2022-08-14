@@ -11,6 +11,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import com.problemsolver.MyOrderApp
+import com.problemsolver.myorder.app.presentation.CustomerOrderChoice.CustomerOrderChoiceScreen
 import com.problemsolver.myorder.ui.theme.MyOrderTheme
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -18,6 +19,7 @@ import dagger.hilt.android.AndroidEntryPoint
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContent { MyOrderApp() }
+        setContent { //MyOrderApp()
+            CustomerOrderChoiceScreen()}
     }
 }
