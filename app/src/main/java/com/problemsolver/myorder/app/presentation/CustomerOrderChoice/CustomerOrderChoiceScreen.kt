@@ -78,6 +78,7 @@ OrderChoiceDetail(
         }
 
         Text(text = "요청사항")
+        Spacer(modifier = Modifier.height(10.dp))
         TextField(
             value = textState.value,
             onValueChange = { textValue -> textState.value = textValue })
@@ -133,7 +134,7 @@ fun OrderChoiceDetail(
 fun OrderChoiceDetailBody(optionDetail : String,
                           optionPrice : String){
 
-    val checkedState = remember { mutableStateOf(true) }
+    val checkedState = remember { mutableStateOf(false) }
 
     Row(modifier = Modifier
         .fillMaxWidth(),
@@ -152,16 +153,18 @@ fun OrderChoiceDetailBody(optionDetail : String,
 
 }
 @Composable
-fun FloatingOrderBar(){
-       Box(modifier = Modifier.fillMaxWidth(),
+fun ColumnScope.FloatingOrderBar(){
+       Box(modifier = Modifier
+           .fillMaxWidth()
+           .padding(20.dp),
        contentAlignment = Alignment.Center){
-           ExtendedFloatingActionButton(
-               text = {
-                   Text(text = "얼~마~ 주문하기")
-               },
-               onClick = { /* Do something! */ },
-               backgroundColor = Color(0xff78C3FA)
-           )
+           Button(modifier = Modifier.fillMaxWidth(),
+               onClick = { /*TODO*/ },
+               colors = ButtonDefaults.buttonColors(
+                   backgroundColor = Color(0xff78C3FA))) {
+               Text(text = "11,900원 주문하기",
+               color = Color.White)
+           }
        }
 }
 
@@ -170,7 +173,7 @@ fun FloatingOrderBar(){
 fun ColumnScope.DevideLine(){
     Box(modifier = Modifier
         .fillMaxWidth()
-        .height(2.dp)
+        .height(1.dp)
         .background(Color(0xff78BBFA)))
     Spacer(modifier = Modifier.height(10.dp))
 }
