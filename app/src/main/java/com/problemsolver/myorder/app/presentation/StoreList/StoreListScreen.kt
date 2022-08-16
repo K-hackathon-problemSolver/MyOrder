@@ -26,7 +26,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
-import androidx.navigation.compose.rememberNavController
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.problemsolver.myorder.R
@@ -35,6 +34,7 @@ import com.problemsolver.myorder.app.presentation.util.BitmapConverter.StringToI
 @Composable
 fun StoreListScreen(
 	navController: NavController,
+	onStoreClick: (String) -> Unit,
 	viewModel: StoreListViewModel = hiltViewModel()
 ) {
 
@@ -73,7 +73,8 @@ fun StoreListScreen(
 				item {
 					StoreItem(
 						storeName = it.name!!,
-						image = it.mainImg!!
+						image = it.mainImg!!,
+						onClick = { onStoreClick(it.uuid!!) }
 					)
 				}
 
@@ -143,10 +144,11 @@ fun locationSelector(
 fun StoreItem(
 	storeName: String,
 	image: String,
+	onClick: () -> Unit,
 	modifier: Modifier = Modifier.padding(10.dp)
 ) {
 	var bitmap = StringToImageBitmap(image)
-	Column(modifier = modifier) {
+	Column(modifier = modifier.clickable(onClick = onClick)) {
 		if (bitmap != null) StoreItemImage(bitmap, storeName)
 		else Image(
 			painterResource(id = R.drawable.sample_cake),
@@ -201,5 +203,5 @@ fun StoreItemImage(
 @Preview()
 @Composable
 fun PreviewStoreListScreen() {
-	StoreListScreen(rememberNavController())
+//	StoreListScreen(rememberNavController())
 }

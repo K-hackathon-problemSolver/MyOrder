@@ -1,6 +1,5 @@
 package com.problemsolver.myorder.app.domain.use_cases
 
-import com.problemsolver.myorder.app.data.remote.response.StoreDTO
 import com.problemsolver.myorder.app.data.remote.response.StoreDetailDTO
 import com.problemsolver.myorder.app.domain.repository.StoreRepository
 import com.problemsolver.myorder.app.domain.util.Resource
@@ -8,8 +7,9 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import retrofit2.HttpException
 import java.io.IOException
+import javax.inject.Inject
 
-class GetStoreDetail (
+class GetStoreDetail @Inject constructor(
 	private val repository: StoreRepository
 ) {
 	operator fun invoke(id: String): Flow<Resource<StoreDetailDTO>> = flow {

@@ -1,6 +1,6 @@
 package com.problemsolver.myorder.app.di
 
-import com.problemsolver.myorder.app.data.remote.StoreListApi
+import com.problemsolver.myorder.app.data.remote.StoreApi
 import com.problemsolver.myorder.app.data.repository.StoreRepositoryImpl
 import com.problemsolver.myorder.app.domain.repository.StoreRepository
 import com.problemsolver.myorder.app.domain.util.log
@@ -61,13 +61,13 @@ object NetworkModule {
 
 	@Provides
 	@Singleton
-	fun provideStoreListApi(retrofit: Retrofit): StoreListApi {
-		return retrofit.create(StoreListApi::class.java)
+	fun provideStoreApi(retrofit: Retrofit): StoreApi {
+		return retrofit.create(StoreApi::class.java)
 	}
 
 	@Provides
 	@Singleton
-	fun provideRecruitingsRepository(api: StoreListApi): StoreRepository {
+	fun provideRecruitingsRepository(api: StoreApi): StoreRepository {
 		return StoreRepositoryImpl(api)
 	}
 
