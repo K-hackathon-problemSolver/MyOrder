@@ -1,8 +1,6 @@
 package com.problemsolver.myorder.app.domain.use_cases
 
-import android.util.Log
-import com.problemsolver.myorder.app.data.remote.dto.StoreDTO
-import com.problemsolver.myorder.app.data.remote.dto.StoreListBodyDTO
+import com.problemsolver.myorder.app.data.remote.response.StoreDTO
 import com.problemsolver.myorder.app.domain.repository.StoreListRepository
 import com.problemsolver.myorder.app.domain.util.Resource
 import kotlinx.coroutines.flow.Flow
@@ -16,9 +14,7 @@ class GetStoreList @Inject constructor(
 ) {
 	operator fun invoke(location: String, offset: Int, limit: Int): Flow<Resource<List<StoreDTO>>> = flow {
 		try {
-			val response = repository.getStoreList(
-				StoreListBodyDTO(location, offset, limit)
-			)
+			val response = repository.getStoreList(location, offset, limit)
 			emit(Resource.Loading())
 			emit(Resource.Success(response.body()!!))
 		} catch(e: HttpException) {

@@ -26,6 +26,7 @@ import com.problemsolver.myorder.R
 import com.problemsolver.myorder.app.presentation.StoreList.StoreItemImage
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
+import com.problemsolver.myorder.app.presentation.StoreList.StoreItemAsyncImage
 
 @Composable
 fun StoreDetailScreen() {
@@ -183,7 +184,7 @@ fun StoreDetailOption(
 	modifier: Modifier = Modifier.padding(10.dp)
 ) {
 	Column(modifier = modifier) {
-		StoreItemImage(imageUrl = imageUrl)
+		StoreItemAsyncImage(imageUrl = imageUrl)
 		Spacer(modifier = Modifier.size(5.dp))
 		Text(text = optionName, fontSize = 16.sp)
 		Spacer(modifier = Modifier.size(5.dp))
