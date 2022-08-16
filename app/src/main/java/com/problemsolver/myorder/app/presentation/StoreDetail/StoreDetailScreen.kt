@@ -22,6 +22,9 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.NavController
+import androidx.navigation.compose.rememberNavController
 import com.problemsolver.myorder.R
 import com.problemsolver.myorder.app.presentation.StoreList.StoreItemImage
 import coil.compose.AsyncImage
@@ -29,7 +32,10 @@ import coil.request.ImageRequest
 import com.problemsolver.myorder.app.presentation.StoreList.StoreItemAsyncImage
 
 @Composable
-fun StoreDetailScreen() {
+fun StoreDetailScreen(
+	navController: NavController,
+	viewModel: StoreDetailViewModel = hiltViewModel()
+) {
 
 	val options = listOf<String>("벌스데이 케이크", "캐릭터 도시락 케이크", "레터링 도시락 케이크", "레터링 케이크")
 	val price = listOf<String>("12,900원~", "6,900원~", "15,900원~", "26,900원~")
@@ -215,5 +221,5 @@ fun StoreDetailOptionImage(
 @Preview
 @Composable
 fun preDetail() {
-	StoreDetailScreen()
+	StoreDetailScreen(rememberNavController())
 }
