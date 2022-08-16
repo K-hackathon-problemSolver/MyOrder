@@ -1,8 +1,8 @@
 package com.problemsolver.myorder.app.di
 
 import com.problemsolver.myorder.app.data.remote.StoreListApi
-import com.problemsolver.myorder.app.data.repository.StoreListRepositoryImpl
-import com.problemsolver.myorder.app.domain.repository.StoreListRepository
+import com.problemsolver.myorder.app.data.repository.StoreRepositoryImpl
+import com.problemsolver.myorder.app.domain.repository.StoreRepository
 import com.problemsolver.myorder.app.domain.util.log
 import dagger.Module
 import dagger.Provides
@@ -67,8 +67,8 @@ object NetworkModule {
 
 	@Provides
 	@Singleton
-	fun provideRecruitingsRepository(api: StoreListApi): StoreListRepository {
-		return StoreListRepositoryImpl(api)
+	fun provideRecruitingsRepository(api: StoreListApi): StoreRepository {
+		return StoreRepositoryImpl(api)
 	}
 
 
