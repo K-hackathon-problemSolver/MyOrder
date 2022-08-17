@@ -11,6 +11,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.Color.Companion.LightGray
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -30,21 +31,27 @@ Column(modifier = Modifier
 }
 
 @Composable
-fun ColumnScope.CustomOrderCheckLists(){
+fun ColumnScope.CustomOrderCheckLists(
+    State : String = "주문상태",
+    Name : String = "케이크명",
+    Owner : String = "주문자",
+    Date : String = "주문날짜",
+    Time : String = "주문시간",
+){
 Column(modifier = Modifier
     .fillMaxWidth()
     ) {
     CustomOrderCheckList(
-        optionState = "접수대기", optionName = "주문제작 케이크", optionOwner = "김성진", optionDate = "2022.08.15", optionTime = "06:50"
+        optionState = State, optionName = Name, optionOwner = Owner, optionDate = Date, optionTime = Time
     )
     CustomOrderCheckList(
-        optionState = "수락", optionName = "도시락 케이크", optionOwner = "김성진", optionDate = "2022.08.15", optionTime = "06:50"
+        optionState = State, optionName = Name, optionOwner = Owner, optionDate = Date, optionTime = Time
     )
     CustomOrderCheckList(
-        optionState = "거절", optionName = "1호 케이크", optionOwner = "김성진", optionDate = "2022.08.15", optionTime = "06:50"
+        optionState = State, optionName = Name, optionOwner = Owner, optionDate = Date, optionTime = Time
     )
     CustomOrderCheckList(
-        optionState = "완료", optionName = "주문제작 케이크", optionOwner = "김성진", optionDate = "2022.08.15", optionTime = "06:50"
+        optionState = State, optionName = Name, optionOwner = Owner, optionDate = Date, optionTime = Time
     )
 }
 }
@@ -64,7 +71,7 @@ fun ColumnScope.CustomOrderCheckList(
    ){
        Column() {
             Text(text = optionState,
-            color = Color(0xff616161))
+            color = com.problemsolver.myorder.ui.theme.LightGray)
            Spacer(modifier = Modifier.height(10.dp))
             DevideLine()
            Spacer(modifier = Modifier.height(10.dp))
@@ -73,13 +80,13 @@ fun ColumnScope.CustomOrderCheckList(
            Spacer(modifier = Modifier.height(10.dp))
             Row() {
                 Text(text = optionOwner,
-                    color = Color(0xff616161))
+                    color = com.problemsolver.myorder.ui.theme.LightGray)
                 Spacer(modifier = Modifier.width(10.dp))
                 Text(text = optionDate,
-                    color = Color(0xff616161))
+                    color = com.problemsolver.myorder.ui.theme.LightGray)
                 Spacer(modifier = Modifier.width(10.dp))
                 Text(text = optionTime,
-                    color = Color(0xff616161))
+                    color = com.problemsolver.myorder.ui.theme.LightGray)
             }
        }
    }
