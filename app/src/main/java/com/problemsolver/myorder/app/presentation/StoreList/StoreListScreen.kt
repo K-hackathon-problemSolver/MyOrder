@@ -190,7 +190,7 @@ fun StoreItemImage(
 	modifier: Modifier = Modifier
 ) {
 	Image(
-		bitmap = bitmap,
+		bitmap = (if(bitmap != null) bitmap else R.drawable.sample_cake) as ImageBitmap,
 		contentDescription = title,
 		contentScale = ContentScale.Crop,
 		modifier = modifier

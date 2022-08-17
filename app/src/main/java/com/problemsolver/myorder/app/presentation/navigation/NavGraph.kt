@@ -25,7 +25,9 @@ import com.problemsolver.myorder.app.presentation.SplashScreen
 import com.problemsolver.myorder.app.presentation.StoreDetail.StoreDetailScreen
 import com.problemsolver.myorder.app.presentation.StoreDetail.StoreDetailViewModel
 import com.problemsolver.myorder.app.presentation.StoreList.StoreListScreen
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.runBlocking
 
 fun NavGraphBuilder.NavGraph(
 	navController: NavController,
@@ -60,7 +62,7 @@ fun NavGraphBuilder.NavGraph(
 		StoreDetailScreen(
 			navController = navController,
 			upPress = upPress,
-			storeId = storeId!!
+			storeId = storeId!!,
 		)
 	}
 }
