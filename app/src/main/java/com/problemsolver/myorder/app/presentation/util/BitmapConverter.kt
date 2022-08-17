@@ -10,8 +10,9 @@ import java.io.ByteArrayOutputStream
 
 
 object BitmapConverter {
-	fun StringToImageBitmap(encodedString: String): ImageBitmap? {
+	fun StringToImageBitmap(encodedString: String?): ImageBitmap? {
 		return try {
+			if(encodedString == null) throw Exception()
 			val decodedByte = Base64.decode(encodedString, Base64.DEFAULT)
 			BitmapFactory.decodeByteArray(decodedByte, 0, decodedByte.size).asImageBitmap()
 		} catch (e: Exception) {
