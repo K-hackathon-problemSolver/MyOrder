@@ -1,6 +1,6 @@
 package com.problemsolver.myorder.app.presentation.StoreList
 
-import com.problemsolver.myorder.app.data.remote.dto.StoreDTO
+import com.problemsolver.myorder.app.data.remote.response.StoreDTO
 
 
 data class StoreListState(

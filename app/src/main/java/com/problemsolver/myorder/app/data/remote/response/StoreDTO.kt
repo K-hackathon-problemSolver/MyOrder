@@ -1,4 +1,4 @@
-package com.problemsolver.myorder.app.data.remote.dto
+package com.problemsolver.myorder.app.data.remote.response
 
 
 data class StoreDTO (

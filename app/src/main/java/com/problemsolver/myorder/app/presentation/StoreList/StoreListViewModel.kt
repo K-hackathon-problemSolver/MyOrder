@@ -7,6 +7,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.problemsolver.myorder.app.domain.use_cases.GetStoreList
 import com.problemsolver.myorder.app.domain.util.Resource
+import com.problemsolver.myorder.app.domain.util.log
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
@@ -31,15 +32,15 @@ class StoreListViewModel @Inject constructor(
 			when (result) {
 				is Resource.Success -> {
                     _state.value = StoreListState(storeList = result.data ?: emptyList())
-					Log.d("test", "success : ${result.data.toString()}")
+					"getStoreList success : ${result.data}".log()
 				}
 				is Resource.Error -> {
                     _state.value = StoreListState(error = result.message ?: "An unexpected error occured")
-					Log.d("test", "error")
+					"getStoreList error".log()
 				}
 				is Resource.Loading -> {
                     _state.value = StoreListState(isLoading = true)
-					Log.d("test", "loading")
+					"getStoreList loading".log()
 				}
 			}
 

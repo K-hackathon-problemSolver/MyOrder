@@ -95,4 +95,9 @@ dependencies {
 
     // coil - async image loader
     implementation "io.coil-kt:coil-compose:2.1.0"
+
+    // fcm
+    implementation 'com.google.firebase:firebase-messaging:23.0.7'
 }
+
+apply plugin: 'com.google.gms.google-services'
