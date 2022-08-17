@@ -50,60 +50,67 @@ fun ColumnScope.OrderChoiceCallender(){
 }
 
 @Composable
-fun ColumnScope.OrderChoiceOptions(){
+fun ColumnScope.OrderChoiceOptions(
+    sheetChoice : String = "시트선택입니다.",
+    shapeChoice : String = "모양선택입니다.",
+    sizeChoice : String = "사이즈선택입니다.",
+    sheetPrice : String = "시트가격입니다.",
+    shapePrice : String = "모양가격입니다.",
+    sizePrice : String = "사이즈가격입니다.",
+){
 
     val scrollstate = rememberScrollState()
 
-Column(modifier = Modifier
-    .fillMaxWidth()
-    .height(350.dp)
-    .verticalScroll(scrollstate)
-    .padding(20.dp)) {
-OrderChoiceDetail(
-    optionName = "시트선택", optionDetail1 = "기본맛(커스터드)", optionPrice1 = "6,900원", optionDetail2 = "크림치즈", optionPrice2 = "7,900원", optionDetail3 = "버터크림", optionPrice3 = "7,900원"
-)
-    DevideLine()
-    OrderChoiceDetail(
-        optionName = "모양선택", optionDetail1 = "원형", optionPrice1 = "6,900원", optionDetail2 = "사각형", optionPrice2 = "7,900원", optionDetail3 = "하트", optionPrice3 = "7,900원"
-    )
-    DevideLine()
-    OrderChoiceDetail(
-        optionName = "사이즈선택", optionDetail1 = "1호", optionPrice1 = "6,900원", optionDetail2 = "2호", optionPrice2 = "7,900원", optionDetail3 = "3호", optionPrice3 = "7,900원"
-    )
-    DevideLine()
-    Column(modifier = Modifier.fillMaxWidth()) {
+    Column(modifier = Modifier
+        .fillMaxWidth()
+        .height(350.dp)
+        .verticalScroll(scrollstate)
+        .padding(20.dp)) {
+        OrderChoiceDetail(
+            optionName = "시트선택", optionDetail1 = sheetChoice, optionPrice1 = sheetPrice, optionDetail2 = sheetChoice, optionPrice2 = sheetPrice, optionDetail3 = sheetChoice, optionPrice3 = sheetPrice
+        )
+        DevideLine()
+        OrderChoiceDetail(
+            optionName = "모양선택", optionDetail1 = shapeChoice, optionPrice1 = shapePrice, optionDetail2 = shapeChoice, optionPrice2 = shapePrice, optionDetail3 = shapeChoice, optionPrice3 = shapePrice
+        )
+        DevideLine()
+        OrderChoiceDetail(
+            optionName = "사이즈선택", optionDetail1 = sizeChoice, optionPrice1 = sizePrice, optionDetail2 = sizeChoice, optionPrice2 = sizePrice, optionDetail3 = sizeChoice, optionPrice3 = sizePrice
+        )
+        DevideLine()
+        Column(modifier = Modifier.fillMaxWidth()) {
 
-        val textState = remember{
-            mutableStateOf("")
+            val textState = remember{
+                mutableStateOf("")
+            }
+
+            Text(text = "요청사항")
+            Spacer(modifier = Modifier.height(10.dp))
+            TextField(
+                value = textState.value,
+                onValueChange = { textValue -> textState.value = textValue })
+            Spacer(modifier = Modifier.height(20.dp))
         }
-
-        Text(text = "요청사항")
-        Spacer(modifier = Modifier.height(10.dp))
-        TextField(
-            value = textState.value,
-            onValueChange = { textValue -> textState.value = textValue })
-        Spacer(modifier = Modifier.height(20.dp))
-    }
-    DevideLine()
-    Column(modifier = Modifier.fillMaxWidth()) {
-        Text(text = "이미지첨부")
-        Box(modifier = Modifier.fillMaxWidth()){
-            Row(modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceBetween) {
-                Button(modifier = Modifier.weight(1f),onClick = { /* Do something! */ }, colors = ButtonDefaults.textButtonColors(
-                    backgroundColor = Color.White,
-                )) {
-                    Icon(painter = painterResource(id = R.drawable.camera), contentDescription ="take picture", tint = Color.LightGray)
-                }
-                Button(modifier = Modifier.weight(1f),onClick = { /* Do something! */ }, colors = ButtonDefaults.textButtonColors(
-                    backgroundColor = Color.White
-                )) {
-                    Icon(painter = painterResource(id = R.drawable.file_upload), contentDescription ="file upload", tint = Color.LightGray)
+        DevideLine()
+        Column(modifier = Modifier.fillMaxWidth()) {
+            Text(text = "이미지첨부")
+            Box(modifier = Modifier.fillMaxWidth()){
+                Row(modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceBetween) {
+                    Button(modifier = Modifier.weight(1f),onClick = { /* Do something! */ }, colors = ButtonDefaults.textButtonColors(
+                        backgroundColor = Color.White,
+                    )) {
+                        Icon(painter = painterResource(id = R.drawable.camera), contentDescription ="take picture", tint = Color.LightGray)
+                    }
+                    Button(modifier = Modifier.weight(1f),onClick = { /* Do something! */ }, colors = ButtonDefaults.textButtonColors(
+                        backgroundColor = Color.White
+                    )) {
+                        Icon(painter = painterResource(id = R.drawable.file_upload), contentDescription ="file upload", tint = Color.LightGray)
+                    }
                 }
             }
         }
     }
-}
 }
 
 @Composable
@@ -153,20 +160,23 @@ fun OrderChoiceDetailBody(optionDetail : String,
 
 }
 @Composable
-fun ColumnScope.FloatingOrderBar(){
-       Box(modifier = Modifier
-           .fillMaxWidth()
-           .padding(20.dp),
-       contentAlignment = Alignment.Center){
-           Button(modifier = Modifier.fillMaxWidth(),
-               onClick = { /*TODO*/ },
-               colors = ButtonDefaults.buttonColors(
-                   backgroundColor = Color(0xff78C3FA))) {
-               Text(text = "11,900원 주문하기",
-               color = Color.White)
-           }
-       }
+fun ColumnScope.FloatingOrderBar(
+    finalPrice : Int = 777
+){
+    Box(modifier = Modifier
+        .fillMaxWidth()
+        .padding(20.dp),
+        contentAlignment = Alignment.Center){
+        Button(modifier = Modifier.fillMaxWidth(),
+            onClick = { /*TODO*/ },
+            colors = ButtonDefaults.buttonColors(
+                backgroundColor = Color(0xff78C3FA))) {
+            Text(text = "${finalPrice}원 주문하기",
+                color = Color.White)
+        }
+    }
 }
+
 
 
 @Composable
