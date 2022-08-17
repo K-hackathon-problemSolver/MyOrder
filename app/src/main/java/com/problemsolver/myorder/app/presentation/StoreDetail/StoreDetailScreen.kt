@@ -16,90 +16,119 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.SavedStateHandle
+import androidx.navigation.NavController
+import androidx.navigation.compose.rememberNavController
 import com.problemsolver.myorder.R
 import com.problemsolver.myorder.app.presentation.StoreList.StoreItemImage
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
+import com.problemsolver.myorder.app.domain.util.log
+import com.problemsolver.myorder.app.presentation.StoreList.StoreItemAsyncImage
+import com.problemsolver.myorder.app.presentation.util.BitmapConverter
+import com.problemsolver.myorder.app.presentation.util.BitmapConverter.StringToImageBitmap
 
 @Composable
-fun StoreDetailScreen() {
+fun StoreDetailScreen(
+	navController: NavController,
+	upPress: () -> Unit = {},
+	storeId: String,
+	viewModel: StoreDetailViewModel = hiltViewModel()
+) {
 
-	val options = listOf<String>("벌스데이 케이크", "캐릭터 도시락 케이크", "레터링 도시락 케이크", "레터링 케이크")
-	val price = listOf<String>("12,900원~", "6,900원~", "15,900원~", "26,900원~")
+	viewModel.state.value.storeDetail.toString().log()
+	viewModel.state.value.toString().log()
 
-	LazyVerticalGrid(
-		columns = GridCells.Fixed(count = 2),
-		contentPadding = PaddingValues(20.dp),
-		modifier = Modifier.background(Color.White)
-	) {
-		item(span = { GridItemSpan(2) }) {
-			Column() {
-				StoreDetailMainPic()
-				StoreDetailDescription()
-				Spacer(modifier = Modifier.height(10.dp))
-				DevideLine()
-				StoreDetailList()
+	if(viewModel.state.value.isLoading) "LOADING!!".log()
+	else {
+		LazyVerticalGrid(
+			columns = GridCells.Fixed(count = 2),
+			contentPadding = PaddingValues(20.dp),
+			modifier = Modifier.background(Color.White)
+		) {
+			val storeDetail = viewModel.state.value.storeDetail
+			storeDetail.toString().log()
 
+			item(span = { GridItemSpan(2) }) {
+				Column() {
+					val bitmap = StringToImageBitmap(storeDetail.mainImg!!)
+					StoreDetailMainPic(bitmap = bitmap)
+					StoreDetailDescription(
+						title = storeDetail.name!!,
+						content = storeDetail.description!!
+					)
+					Spacer(modifier = Modifier.height(10.dp))
+					DevideLine()
+					StoreDetailList()
+
+				}
 			}
-		}
 
-		items(options.size) {
-			StoreDetailOption(
-				optionName = options[it],
-				imageUrl = "https://i0.wp.com/moi.today/wp-content/uploads/2020/09/IMG_220812-scaled.jpg?fit=2560%2C2560&ssl=1",
-				price = price[it]
-			)
+			viewModel.state.value.storeDetail.cakeList?.forEach {
+				item {
+					StoreDetailOption(
+						optionName = it.option,
+						image = it.img,
+						price = it.minPrice,
+					)
+				}
+			}
 		}
 	}
 }
 
 
 @Composable
-fun StoreDetailMainPic() {
+fun StoreDetailMainPic(
+	bitmap: ImageBitmap?,
+	title: String = "",
+	modifier: Modifier = Modifier
+) {
 	Image(
-		modifier = Modifier
-			.padding(30.dp)
-			.fillMaxWidth(),
+		bitmap = (if(bitmap != null) bitmap else R.drawable.sample_cake) as ImageBitmap,
+		contentDescription = title,
 		contentScale = ContentScale.Crop,
-		painter = painterResource(id = R.drawable.sample_cake),
-		contentDescription = "mainPic"
+		modifier = modifier
+			.fillMaxWidth()
+			.padding(30.dp)
+			.shadow(elevation = 5.dp, shape = RoundedCornerShape(5.dp))
+
 	)
 }
 
-
 @Composable
-fun StoreDetailDescription() {
+fun StoreDetailDescription(
+	title: String,
+	content: String = ""
+) {
 	Column(
-		modifier = Modifier.fillMaxWidth(),
-		horizontalAlignment = Alignment.CenterHorizontally
+		modifier = Modifier.fillMaxWidth(), horizontalAlignment = Alignment.CenterHorizontally
 	) {
 		Text(
-			text = "위드미케이크",
-			fontSize = 20.sp
+			text = title, fontSize = 20.sp
 		)
 		Spacer(modifier = Modifier.size(5.dp))
 		Box(
-			modifier = Modifier
-				.fillMaxWidth()
+			modifier = Modifier.fillMaxWidth()
 		) {
 			timeSelector(modifier = Modifier.align(Alignment.Center), { /* TODO */ })
 		}
 		Spacer(modifier = Modifier.size(5.dp))
-		Text(text = "안녕하세요. 사랑과 정성으로 만드는 위드미 케이크입니다.")
-		Text(text = "당일배송 가능합니다.")
+		Text(text = content)
 	}
 }
 
 @Composable
 fun timeSelector(
-	modifier: Modifier = Modifier,
-	onCheckedChange: () -> Unit
+	modifier: Modifier = Modifier, onCheckedChange: () -> Unit
 ) {
 	val categoryList = listOf(
 		"월 11:00 ~ 17:00",
@@ -126,13 +155,11 @@ fun timeSelector(
 			onCheckedChange = { onCheckedChange() },
 		) {
 			var isDropDownMenuExpanded by remember { mutableStateOf(false) }
-			Icon(
-				Icons.Default.KeyboardArrowDown,
+			Icon(Icons.Default.KeyboardArrowDown,
 				contentDescription = "arrow down",
 				modifier = Modifier
 					.size(30.dp)
-					.clickable { isDropDownMenuExpanded = true }
-			)
+					.clickable { isDropDownMenuExpanded = true })
 
 			DropdownMenu(
 				modifier = Modifier.wrapContentSize(),
@@ -142,12 +169,10 @@ fun timeSelector(
 				repeat(7) {
 
 					DropdownMenuItem(
-						modifier = Modifier.width(200.dp),
-						onClick = {
+						modifier = Modifier.width(200.dp), onClick = {
 							selectedText = categoryList.get(it)
 							isDropDownMenuExpanded = false
-						},
-						contentPadding = PaddingValues(horizontal = 20.dp)
+						}, contentPadding = PaddingValues(horizontal = 20.dp)
 					) {
 						Text(text = categoryList.get(it))
 					}
@@ -178,30 +203,27 @@ fun StoreDetailList() {
 @Composable
 fun StoreDetailOption(
 	optionName: String,
-	imageUrl: String,
-	price: String,
+	image: String,
+	price: Int,
 	modifier: Modifier = Modifier.padding(10.dp)
 ) {
 	Column(modifier = modifier) {
-		StoreItemImage(imageUrl = imageUrl)
+		var bitmap = BitmapConverter.StringToImageBitmap(image)
+		StoreItemImage(bitmap!!, optionName)
 		Spacer(modifier = Modifier.size(5.dp))
 		Text(text = optionName, fontSize = 16.sp)
 		Spacer(modifier = Modifier.size(5.dp))
-		Text(text = price, fontSize = 16.sp)
+		Text(text = price.toString(), fontSize = 16.sp)
 		Spacer(modifier = Modifier.size(20.dp))
 	}
 }
 
 @Composable
 fun StoreDetailOptionImage(
-	imageUrl: String,
-	modifier: Modifier = Modifier
+	imageUrl: String, modifier: Modifier = Modifier
 ) {
 	AsyncImage(
-		model = ImageRequest.Builder(LocalContext.current)
-			.data(imageUrl)
-			.crossfade(true)
-			.build(),
+		model = ImageRequest.Builder(LocalContext.current).data(imageUrl).crossfade(true).build(),
 		contentDescription = "option image",
 		placeholder = painterResource(R.drawable.sample_cake),
 		contentScale = ContentScale.Crop,
@@ -214,5 +236,5 @@ fun StoreDetailOptionImage(
 @Preview
 @Composable
 fun preDetail() {
-	StoreDetailScreen()
+//	StoreDetailScreen(rememberNavController())
 }

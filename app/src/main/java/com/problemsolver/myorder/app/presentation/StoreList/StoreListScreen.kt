@@ -1,6 +1,5 @@
 package com.problemsolver.myorder.app.presentation.StoreList
 
-import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -26,22 +25,18 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
-import androidx.navigation.compose.rememberNavController
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.problemsolver.myorder.R
 import com.problemsolver.myorder.app.presentation.util.BitmapConverter.StringToImageBitmap
-import com.problemsolver.myorder.ui.theme.MyOrderTheme
 
 @Composable
 fun StoreListScreen(
 	navController: NavController,
+	onStoreClick: (String) -> Unit,
 	viewModel: StoreListViewModel = hiltViewModel()
 ) {
-//    val stores = listOf<String>("스윗케이크", "루미케이크", "루미케이크","루미케이크","루미케이크","루미케이크","루미케이크","루미케이크","루미케이크","루미케이크",)
-
 
 	Column(
 		modifier = Modifier
@@ -78,7 +73,8 @@ fun StoreListScreen(
 				item {
 					StoreItem(
 						storeName = it.name!!,
-						image = it.mainImg!!
+						image = it.mainImg!!,
+						onClick = { onStoreClick(it.uuid!!) }
 					)
 				}
 
@@ -148,12 +144,11 @@ fun locationSelector(
 fun StoreItem(
 	storeName: String,
 	image: String,
+	onClick: () -> Unit,
 	modifier: Modifier = Modifier.padding(10.dp)
 ) {
-//	Log.d("testtest", image)
 	var bitmap = StringToImageBitmap(image)
-	Column(modifier = modifier) {
-//        StoreItemAsyncImage(imageUrl = imageUrl)
+	Column(modifier = modifier.clickable(onClick = onClick)) {
 		if (bitmap != null) StoreItemImage(bitmap, storeName)
 		else Image(
 			painterResource(id = R.drawable.sample_cake),
@@ -195,7 +190,7 @@ fun StoreItemImage(
 	modifier: Modifier = Modifier
 ) {
 	Image(
-		bitmap = bitmap,
+		bitmap = (if(bitmap != null) bitmap else R.drawable.sample_cake) as ImageBitmap,
 		contentDescription = title,
 		contentScale = ContentScale.Crop,
 		modifier = modifier
@@ -208,5 +203,5 @@ fun StoreItemImage(
 @Preview()
 @Composable
 fun PreviewStoreListScreen() {
-	StoreListScreen(rememberNavController())
+//	StoreListScreen(rememberNavController())
 }
