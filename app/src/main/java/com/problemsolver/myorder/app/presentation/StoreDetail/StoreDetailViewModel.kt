@@ -29,6 +29,9 @@ class StoreDetailViewModel @Inject constructor(
 	private val _state = mutableStateOf(StoreDetailState())
 	val state: State<StoreDetailState> = _state
 
+	private val _option = mutableStateOf("")
+	val option: State<String> = _option
+
 	init {
 		if (!storeId.isNullOrBlank()) getStoreDetail(storeId!!)
 	}
@@ -51,5 +54,13 @@ class StoreDetailViewModel @Inject constructor(
 				}
 			}
 		}.launchIn(viewModelScope)
+	}
+
+	fun onEvent(event: StoreDetailEvent) {
+		when(event) {
+			is StoreDetailEvent.clickCake -> {
+				_option.value = event.value
+			}
+		}
 	}
 }
