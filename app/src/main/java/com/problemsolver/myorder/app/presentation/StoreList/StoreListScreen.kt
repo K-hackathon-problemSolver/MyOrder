@@ -33,7 +33,6 @@ import com.problemsolver.myorder.app.presentation.util.BitmapConverter.StringToI
 
 @Composable
 fun StoreListScreen(
-	navController: NavController,
 	onStoreClick: (String) -> Unit,
 	viewModel: StoreListViewModel = hiltViewModel()
 ) {
