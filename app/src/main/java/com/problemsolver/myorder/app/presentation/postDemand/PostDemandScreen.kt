@@ -1,24 +1,27 @@
 package com.problemsolver.myorder.app.presentation.StoreDetail
 
 import android.app.DatePickerDialog
+import android.net.Uri
 import android.widget.DatePicker
-import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.verticalScroll
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import coil.compose.AsyncImage
+import coil.request.ImageRequest
 import com.google.gson.Gson
 import com.problemsolver.myorder.R
 import com.problemsolver.myorder.app.domain.model.Options
@@ -58,8 +61,11 @@ fun PostDemandScreen(
 				onDateChanged = { y, m, d -> viewModel.onEvent(StoreDetailEvent.dateChanged(y, m, d)) }
 			)
 			OrderChoiceOptions(
+				image = viewModel.imageUri.value,
 				optionsStr = testOption,
-				onPriceChanged = { viewModel.onEvent(StoreDetailEvent.priceChanged(it)) }
+				onPriceChanged = { viewModel.onEvent(StoreDetailEvent.priceChanged(it)) },
+				onImageSelected = { viewModel.onEvent(StoreDetailEvent.imageSelected(it))},
+				onImageRemoved = { viewModel.onEvent(StoreDetailEvent.imageRemoved(it))}
 			)
 		}
 	}
@@ -103,10 +109,14 @@ fun ColumnScope.OrderChoiceHeader(
 	}
 }
 
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun ColumnScope.OrderChoiceOptions(
+	image: Uri,
 	optionsStr: String,
-	onPriceChanged: (Int) -> Unit
+	onPriceChanged: (Int) -> Unit,
+	onImageSelected: (Uri) -> Unit,
+	onImageRemoved: (Uri?) -> Unit,
 ) {
 	val scrollstate = rememberScrollState()
 
@@ -145,8 +155,33 @@ fun ColumnScope.OrderChoiceOptions(
 		}
 		DivideLine()
 
-		Column(modifier = Modifier.fillMaxWidth()) {
+		var showMenu by remember { mutableStateOf(false) }
+		val launcher = rememberLauncherForActivityResult(
+			contract = ActivityResultContracts.GetContent()
+		) { uri: Uri? -> uri?.let { onImageSelected(it) } }
+
+		Column(
+			modifier = Modifier.fillMaxWidth(),
+			horizontalAlignment = Alignment.CenterHorizontally
+		) {
 			Text(text = "이미지첨부")
+			Spacer(modifier = Modifier.height(10.dp))
+			AsyncImage(
+				model = ImageRequest.Builder(LocalContext.current)
+					.data(image)
+					.crossfade(true)
+					.build(),
+				contentDescription = null,
+				contentScale = ContentScale.Crop,
+				modifier = Modifier
+					.fillMaxSize(0.5f)
+					.clip(shape = RoundedCornerShape(15.dp))
+					.combinedClickable(
+						onClick = { launcher.launch("image/*") },
+						onLongClick = { showMenu = true },
+					)
+			)
+			Spacer(modifier = Modifier.height(10.dp))
 			Box(modifier = Modifier.fillMaxWidth()) {
 				Row(
 					modifier = Modifier.fillMaxWidth(),
@@ -154,7 +189,7 @@ fun ColumnScope.OrderChoiceOptions(
 				) {
 					Button(
 						modifier = Modifier.weight(1f),
-						onClick = { /* Do something! */ },
+						onClick = { launcher.launch("image/*") },
 						colors = ButtonDefaults.textButtonColors(
 							backgroundColor = Color.White,
 						)
@@ -167,7 +202,7 @@ fun ColumnScope.OrderChoiceOptions(
 					}
 					Button(
 						modifier = Modifier.weight(1f),
-						onClick = { /* Do something! */ },
+						onClick = { launcher.launch("image/*") },
 						colors = ButtonDefaults.textButtonColors(
 							backgroundColor = Color.White
 						)
@@ -180,7 +215,15 @@ fun ColumnScope.OrderChoiceOptions(
 					}
 				}
 			}
+
+			PopupMenu(
+				item = "삭제",
+				onClickCallbacks = {onImageRemoved(null)},
+				showMenu = showMenu,
+				onDismiss = { showMenu = false }
+			)
 		}
+
 	}
 }
 
@@ -262,6 +305,25 @@ fun ColumnScope.DivideLine() {
 			.background(Color(0xff78BBFA))
 	)
 	Spacer(modifier = Modifier.height(10.dp))
+}
+
+
+@Composable
+fun PopupMenu(
+	item: String,
+	onClickCallbacks: () -> Unit,
+	showMenu: Boolean,
+	onDismiss: () -> Unit,
+) {
+	DropdownMenu(
+		expanded = showMenu,
+		onDismissRequest = { onDismiss() },
+	) {
+		DropdownMenuItem(onClick = {
+			onDismiss()
+			onClickCallbacks()
+		}) { Text(text = item) }
+	}
 }
 
 @Preview
