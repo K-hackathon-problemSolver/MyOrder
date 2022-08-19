@@ -38,12 +38,11 @@ fun PostDemandScreen(
 	test.data.put("문구", null)
 	val testOption = Gson().toJson(test)
 
-	"ViewModel.option.value".log()
 	viewModel.option.value.log()
 
 	Scaffold(
 		floatingActionButton = {
-			FloatingOrderBar()
+			FloatingOrderBar(viewModel.price.value)
 		},
 		floatingActionButtonPosition = FabPosition.Center,
 		modifier = Modifier
@@ -55,8 +54,13 @@ fun PostDemandScreen(
 		Column(
 			modifier = Modifier.fillMaxSize()
 		) {
-			OrderChoiceHeader(onDateChanged = { y, m, d -> viewModel.onDateChanged(y, m, d) })
-			OrderChoiceOptions(testOption)
+			OrderChoiceHeader(
+				onDateChanged = { y, m, d -> viewModel.onEvent(StoreDetailEvent.dateChanged(y, m, d)) }
+			)
+			OrderChoiceOptions(
+				optionsStr = testOption,
+				onPriceChanged = { viewModel.onEvent(StoreDetailEvent.priceChanged(it)) }
+			)
 		}
 	}
 }
@@ -101,7 +105,8 @@ fun ColumnScope.OrderChoiceHeader(
 
 @Composable
 fun ColumnScope.OrderChoiceOptions(
-	optionsStr: String
+	optionsStr: String,
+	onPriceChanged: (Int) -> Unit
 ) {
 	val scrollstate = rememberScrollState()
 
@@ -116,9 +121,12 @@ fun ColumnScope.OrderChoiceOptions(
 			.padding(horizontal = 20.dp)
 			.padding(bottom = 80.dp)
 	) {
+
 		options.data.forEach { (category, map) ->
 			OrderChoiceDetail(
-				optionName = category, options = map?.toList()
+				optionName = category,
+				options = map?.toList(),
+				onPriceChanged = onPriceChanged
 			)
 		}
 		DivideLine()
@@ -178,9 +186,9 @@ fun ColumnScope.OrderChoiceOptions(
 
 @Composable
 fun OrderChoiceDetail(
-	optionName: String, options: List<Pair<String, Int>>?
+	optionName: String, options: List<Pair<String, Int>>?,
+	onPriceChanged: (Int) -> Unit
 ) {
-
 	Column(
 		modifier = Modifier.fillMaxWidth()
 	) {
@@ -192,7 +200,8 @@ fun OrderChoiceDetail(
 		options?.onEach {
 			OrderChoiceDetailBody(
 				optionDetail = it.first,
-				optionPrice = it.second
+				optionPrice = it.second,
+				onPriceChanged = onPriceChanged
 			)
 		}
 	}
@@ -200,7 +209,9 @@ fun OrderChoiceDetail(
 
 @Composable
 fun OrderChoiceDetailBody(
-	optionDetail: String, optionPrice: Int
+	optionDetail: String,
+	optionPrice: Int,
+	onPriceChanged: (Int) -> Unit
 ) {
 
 	val checkedState = remember { mutableStateOf(false) }
@@ -211,7 +222,12 @@ fun OrderChoiceDetailBody(
 		verticalAlignment = Alignment.CenterVertically
 	) {
 		Row(verticalAlignment = Alignment.CenterVertically) {
-			Checkbox(checked = checkedState.value, onCheckedChange = { checkedState.value = it })
+			Checkbox(
+				checked = checkedState.value,
+				onCheckedChange = {
+					checkedState.value = it
+					onPriceChanged(if(it) optionPrice else -optionPrice)
+				})
 			Text(text = optionDetail, fontWeight = FontWeight.Bold)
 		}
 		Text(text = "$optionPrice 원", fontWeight = FontWeight.Bold)
@@ -221,7 +237,7 @@ fun OrderChoiceDetailBody(
 
 @Composable
 fun FloatingOrderBar(
-	finalPrice: Int = 777
+	finalPrice: Int
 ) {
 	Button(
 		modifier = Modifier.fillMaxWidth(0.9f),

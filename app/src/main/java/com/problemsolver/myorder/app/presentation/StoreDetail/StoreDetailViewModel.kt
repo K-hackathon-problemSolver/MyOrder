@@ -26,19 +26,20 @@ class StoreDetailViewModel @Inject constructor(
 ) : ViewModel() {
 
 	private val storeId: String? = savedStateHandle[DetailDestinationKey.STORE]
+	private var cakeId = mutableStateOf("")
 
 	private var _state = mutableStateOf(StoreDetailState())
 	val state: State<StoreDetailState> = _state
 
-<<<<<<< Updated upstream
-=======
 	private var _option = mutableStateOf("")
 	val option: State<String> = _option
 
 	private var _date = mutableStateOf(Date())
 	val date: State<Date> = _date
 
->>>>>>> Stashed changes
+	private var _price = mutableStateOf(0)
+	val price: State<Int> = _price
+
 	init {
 		if (!storeId.isNullOrBlank()) getStoreDetail(storeId!!)
 	}
@@ -62,17 +63,21 @@ class StoreDetailViewModel @Inject constructor(
 			}
 		}.launchIn(viewModelScope)
 	}
+
 	fun onEvent(event: StoreDetailEvent) {
 		when(event) {
 			is StoreDetailEvent.clickCake -> {
-				_option.value = event.value
+				cakeId.value = event.cakeId
+				_option.value = event.option
+			}
+			is StoreDetailEvent.dateChanged -> {
+				_date.value.year = event.year
+				_date.value.month = event.month
+				_date.value.day = event.day
+			}
+			is StoreDetailEvent.priceChanged -> {
+				_price.value += event.price
 			}
 		}
-	}
-
-	fun onDateChanged(year: Int, month: Int, day: Int) {
-		_date.value.year = year
-		_date.value.month = month
-		_date.value.day = day
 	}
 }

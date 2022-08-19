@@ -24,12 +24,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
-<<<<<<< Updated upstream
-import androidx.lifecycle.SavedStateHandle
-import androidx.navigation.NavController
-import androidx.navigation.compose.rememberNavController
-=======
->>>>>>> Stashed changes
 import com.problemsolver.myorder.R
 import com.problemsolver.myorder.app.presentation.StoreList.StoreItemImage
 import coil.compose.AsyncImage
@@ -82,7 +76,7 @@ fun StoreDetailScreen(
 							description = it.description,
 							price = it.minPrice,
 						) {
-							viewModel.onEvent(StoreDetailEvent.clickCake(it.option))
+							viewModel.onEvent(StoreDetailEvent.clickCake(it.uuid, it.option))
 							scope.launch {
 								state.animateTo(
 									ModalBottomSheetValue.Expanded,
