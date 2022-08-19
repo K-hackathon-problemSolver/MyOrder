@@ -19,12 +19,17 @@ import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.navigation.NavBackStackEntry
+<<<<<<< Updated upstream
+import androidx.lifecycle.SavedStateHandle
 import androidx.navigation.NavController
+import androidx.navigation.compose.rememberNavController
+=======
+>>>>>>> Stashed changes
 import com.problemsolver.myorder.R
 import com.problemsolver.myorder.app.presentation.StoreList.StoreItemImage
 import coil.compose.AsyncImage
@@ -220,10 +225,11 @@ fun StoreDetailOption(
 		var bitmap = BitmapConverter.StringToImageBitmap(image)
 		StoreItemImage(bitmap!!, optionName)
 		Spacer(modifier = Modifier.size(5.dp))
-		Text(text = optionName, fontSize = 16.sp)
+		Text(text = optionName, fontSize = 16.sp, fontWeight = FontWeight.Bold)
 		Spacer(modifier = Modifier.size(5.dp))
 		Text(text = description, fontSize = 14.sp)
-		Text(text = price.toString(), fontSize = 16.sp)
+		Spacer(modifier = Modifier.size(5.dp))
+		Text(text = "$price 원~", fontSize = 14.sp, fontWeight = FontWeight.Bold)
 		Spacer(modifier = Modifier.size(20.dp))
 	}
 }

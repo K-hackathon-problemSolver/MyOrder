@@ -1,6 +1,9 @@
 package com.problemsolver.myorder.app.presentation.StoreDetail
 
+import android.app.DatePickerDialog
+import android.widget.DatePicker
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
@@ -11,6 +14,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
@@ -19,6 +23,7 @@ import com.google.gson.Gson
 import com.problemsolver.myorder.R
 import com.problemsolver.myorder.app.domain.model.Options
 import com.problemsolver.myorder.app.domain.util.log
+import java.util.*
 
 @Composable
 fun PostDemandScreen(
@@ -33,12 +38,16 @@ fun PostDemandScreen(
 	test.data.put("문구", null)
 	val testOption = Gson().toJson(test)
 
+	"ViewModel.option.value".log()
+	viewModel.option.value.log()
+
 	Scaffold(
 		floatingActionButton = {
 			FloatingOrderBar()
 		},
 		floatingActionButtonPosition = FabPosition.Center,
-		modifier = Modifier.padding(top = 30.dp)
+		modifier = Modifier
+			.padding(top = 30.dp)
 			.fillMaxWidth()
 			.heightIn(min = 300.dp, max = 500.dp)
 			.background(color = Color.White)
@@ -46,29 +55,48 @@ fun PostDemandScreen(
 		Column(
 			modifier = Modifier.fillMaxSize()
 		) {
-			OrderChoiceHeader()
-			OrderChoiceCalendar()
+			OrderChoiceHeader(onDateChanged = { y, m, d -> viewModel.onDateChanged(y, m, d) })
 			OrderChoiceOptions(testOption)
 		}
 	}
 }
 
 @Composable
-fun ColumnScope.OrderChoiceHeader() {
+fun ColumnScope.OrderChoiceHeader(
+	onDateChanged: (Int, Int, Int) -> Unit
+) {
+	val mYear: Int
+	val mMonth: Int
+	val mDay: Int
+	val mCalendar = Calendar.getInstance()
+	mYear = mCalendar.get(Calendar.YEAR)
+	mMonth = mCalendar.get(Calendar.MONTH)
+	mDay = mCalendar.get(Calendar.DAY_OF_MONTH)
+
+	mCalendar.time = Date()
+
+	val mDate = remember { mutableStateOf("") }
+
+	val mDatePickerDialog = DatePickerDialog(
+		LocalContext.current,
+		{ _: DatePicker, mYear: Int, mMonth: Int, mDayOfMonth: Int ->
+			onDateChanged(mYear, mMonth, mDayOfMonth)
+			mDate.value = "$mYear 년 $mMonth 월 $mDay 일 ▼"
+		}, mYear, mMonth, mDay
+	)
+
 	Row(
 		modifier = Modifier
 			.fillMaxWidth()
 			.padding(20.dp),
 		horizontalArrangement = Arrangement.SpaceBetween
 	) {
-		Text(text = "주문 가능 날짜")
-		Text(text = "년/월 선택기능▼")
+		Text("주문 가능 날짜")
+		Text(
+			text = mDate.value.ifBlank { "날짜 선택 ▼" },
+			modifier = Modifier.clickable{ mDatePickerDialog.show() }
+		)
 	}
-}
-
-@Composable
-fun ColumnScope.OrderChoiceCalendar() {
-
 }
 
 @Composable

@@ -10,6 +10,7 @@ import com.problemsolver.myorder.app.domain.use_cases.GetStoreDetail
 import com.problemsolver.myorder.app.domain.util.Resource
 import com.problemsolver.myorder.app.domain.util.log
 import com.problemsolver.myorder.app.presentation.navigation.DetailDestinationKey
+import com.problemsolver.myorder.app.presentation.postDemand.Date
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.launchIn
@@ -26,12 +27,18 @@ class StoreDetailViewModel @Inject constructor(
 
 	private val storeId: String? = savedStateHandle[DetailDestinationKey.STORE]
 
-	private val _state = mutableStateOf(StoreDetailState())
+	private var _state = mutableStateOf(StoreDetailState())
 	val state: State<StoreDetailState> = _state
 
-	private val _option = mutableStateOf("")
+<<<<<<< Updated upstream
+=======
+	private var _option = mutableStateOf("")
 	val option: State<String> = _option
 
+	private var _date = mutableStateOf(Date())
+	val date: State<Date> = _date
+
+>>>>>>> Stashed changes
 	init {
 		if (!storeId.isNullOrBlank()) getStoreDetail(storeId!!)
 	}
@@ -55,12 +62,17 @@ class StoreDetailViewModel @Inject constructor(
 			}
 		}.launchIn(viewModelScope)
 	}
-
 	fun onEvent(event: StoreDetailEvent) {
 		when(event) {
 			is StoreDetailEvent.clickCake -> {
 				_option.value = event.value
 			}
 		}
+	}
+
+	fun onDateChanged(year: Int, month: Int, day: Int) {
+		_date.value.year = year
+		_date.value.month = month
+		_date.value.day = day
 	}
 }
