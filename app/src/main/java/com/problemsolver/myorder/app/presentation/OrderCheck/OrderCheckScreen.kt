@@ -11,15 +11,19 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Color.Companion.White
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.HorizontalPager
 import com.google.accompanist.pager.rememberPagerState
+import com.problemsolver.myorder.app._enums.OrderType
 import kotlinx.coroutines.launch
 
 
 @OptIn(ExperimentalPagerApi::class)
 @Composable
-fun OrderCheckScreen(){
+fun OrderCheckScreen(
+    viewModel: OrderCheckViewModel = hiltViewModel()
+){
 
     var tapPage by remember { mutableStateOf(TabPage.접수대기)}
     val pagerState = rememberPagerState()
@@ -43,10 +47,22 @@ fun OrderCheckScreen(){
                 state = pagerState) { index ->
                     Column(modifier = Modifier.fillMaxSize()) {
                         when (index) {
-                            0 -> WaitScreen()
-                            1 -> AcceptScreen()
-                            2 -> RejectScreen()
-                            3 -> CompleteScreen()
+                            0 -> {
+                                viewModel.onTypeChanged(OrderType.WAITING)
+                                WaitScreen()
+                            }
+                            1 -> {
+                                viewModel.onTypeChanged(OrderType.ACCEPTED)
+                                AcceptScreen()
+                            }
+                            2 -> {
+                                viewModel.onTypeChanged(OrderType.REJECTED)
+                                RejectScreen()
+                            }
+                            3 -> {
+                                viewModel.onTypeChanged(OrderType.COMPLETED)
+                                CompleteScreen()
+                            }
                         }
                     }
                 }
