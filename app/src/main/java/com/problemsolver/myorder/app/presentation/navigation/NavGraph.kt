@@ -6,7 +6,6 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.*
 import androidx.navigation.compose.composable
 import com.problemsolver.myorder.app.presentation.SplashScreen
-import com.problemsolver.myorder.app.presentation.StoreDetail.PostDemandScreen
 import com.problemsolver.myorder.app.presentation.StoreDetail.StoreDetailScreen
 import com.problemsolver.myorder.app.presentation.StoreList.StoreListScreen
 

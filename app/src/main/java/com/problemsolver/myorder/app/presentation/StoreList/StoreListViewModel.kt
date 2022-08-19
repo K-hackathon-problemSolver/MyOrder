@@ -21,17 +21,17 @@ class StoreListViewModel @Inject constructor(
 	private val _state = mutableStateOf(StoreListState())
 	val state: State<StoreListState> = _state
 
-	private var location: String = "SUYUNG"
+	private var location = mutableStateOf("SUYUNG")
 
 	init {
-		getStoreList(location, 0, 20)
+		getStoreList(location.value, 0, 20)
 	}
 
 	private fun getStoreList(location: String, offset: Int, limit: Int) {
 		getStoreListUseCase(location, offset, limit).onEach { result ->
 			when (result) {
 				is Resource.Success -> {
-                    _state.value = StoreListState(storeList = result.data ?: emptyList())
+                    _state.value = StoreListState(isLoading = false, storeList = result.data ?: emptyList())
 					"getStoreList success : ${result.data}".log()
 				}
 				is Resource.Error -> {
@@ -48,7 +48,8 @@ class StoreListViewModel @Inject constructor(
 	}
 
 	fun changeLocation(location: String) {
-		this.location = location
+		this.location.value = location
+		"change location : $location".log()
 		getStoreList(location, 0, 20)
 	}
 }

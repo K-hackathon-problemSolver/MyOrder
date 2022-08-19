@@ -1,24 +1,32 @@
 package com.problemsolver.myorder.app.presentation.StoreDetail
 
-import androidx.compose.foundation.background
+import android.app.DatePickerDialog
+import android.net.Uri
+import android.widget.DatePicker
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.verticalScroll
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import coil.compose.AsyncImage
+import coil.request.ImageRequest
 import com.google.gson.Gson
 import com.problemsolver.myorder.R
 import com.problemsolver.myorder.app.domain.model.Options
 import com.problemsolver.myorder.app.domain.util.log
+import java.util.*
 
 @Composable
 fun PostDemandScreen(
@@ -33,12 +41,15 @@ fun PostDemandScreen(
 	test.data.put("문구", null)
 	val testOption = Gson().toJson(test)
 
+	viewModel.option.value.log()
+
 	Scaffold(
 		floatingActionButton = {
-			FloatingOrderBar()
+			FloatingOrderBar(viewModel.price.value)
 		},
 		floatingActionButtonPosition = FabPosition.Center,
-		modifier = Modifier.padding(top = 30.dp)
+		modifier = Modifier
+			.padding(top = 30.dp)
 			.fillMaxWidth()
 			.heightIn(min = 300.dp, max = 500.dp)
 			.background(color = Color.White)
@@ -46,34 +57,66 @@ fun PostDemandScreen(
 		Column(
 			modifier = Modifier.fillMaxSize()
 		) {
-			OrderChoiceHeader()
-			OrderChoiceCalendar()
-			OrderChoiceOptions(testOption)
+			OrderChoiceHeader(
+				onDateChanged = { y, m, d -> viewModel.onEvent(StoreDetailEvent.dateChanged(y, m, d)) }
+			)
+			OrderChoiceOptions(
+				image = viewModel.imageUri.value,
+				optionsStr = testOption,
+				onPriceChanged = { viewModel.onEvent(StoreDetailEvent.priceChanged(it)) },
+				onImageSelected = { viewModel.onEvent(StoreDetailEvent.imageSelected(it))},
+				onImageRemoved = { viewModel.onEvent(StoreDetailEvent.imageRemoved(it))}
+			)
 		}
 	}
 }
 
 @Composable
-fun ColumnScope.OrderChoiceHeader() {
+fun ColumnScope.OrderChoiceHeader(
+	onDateChanged: (Int, Int, Int) -> Unit
+) {
+	val mYear: Int
+	val mMonth: Int
+	val mDay: Int
+	val mCalendar = Calendar.getInstance()
+	mYear = mCalendar.get(Calendar.YEAR)
+	mMonth = mCalendar.get(Calendar.MONTH)
+	mDay = mCalendar.get(Calendar.DAY_OF_MONTH)
+
+	mCalendar.time = Date()
+
+	val mDate = remember { mutableStateOf("") }
+
+	val mDatePickerDialog = DatePickerDialog(
+		LocalContext.current,
+		{ _: DatePicker, mYear: Int, mMonth: Int, mDayOfMonth: Int ->
+			onDateChanged(mYear, mMonth, mDayOfMonth)
+			mDate.value = "$mYear 년 $mMonth 월 $mDay 일 ▼"
+		}, mYear, mMonth, mDay
+	)
+
 	Row(
 		modifier = Modifier
 			.fillMaxWidth()
 			.padding(20.dp),
 		horizontalArrangement = Arrangement.SpaceBetween
 	) {
-		Text(text = "주문 가능 날짜")
-		Text(text = "년/월 선택기능▼")
+		Text("주문 가능 날짜")
+		Text(
+			text = mDate.value.ifBlank { "날짜 선택 ▼" },
+			modifier = Modifier.clickable{ mDatePickerDialog.show() }
+		)
 	}
 }
 
-@Composable
-fun ColumnScope.OrderChoiceCalendar() {
-
-}
-
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun ColumnScope.OrderChoiceOptions(
-	optionsStr: String
+	image: Uri,
+	optionsStr: String,
+	onPriceChanged: (Int) -> Unit,
+	onImageSelected: (Uri) -> Unit,
+	onImageRemoved: (Uri?) -> Unit,
 ) {
 	val scrollstate = rememberScrollState()
 
@@ -88,9 +131,12 @@ fun ColumnScope.OrderChoiceOptions(
 			.padding(horizontal = 20.dp)
 			.padding(bottom = 80.dp)
 	) {
+
 		options.data.forEach { (category, map) ->
 			OrderChoiceDetail(
-				optionName = category, options = map?.toList()
+				optionName = category,
+				options = map?.toList(),
+				onPriceChanged = onPriceChanged
 			)
 		}
 		DivideLine()
@@ -109,8 +155,33 @@ fun ColumnScope.OrderChoiceOptions(
 		}
 		DivideLine()
 
-		Column(modifier = Modifier.fillMaxWidth()) {
+		var showMenu by remember { mutableStateOf(false) }
+		val launcher = rememberLauncherForActivityResult(
+			contract = ActivityResultContracts.GetContent()
+		) { uri: Uri? -> uri?.let { onImageSelected(it) } }
+
+		Column(
+			modifier = Modifier.fillMaxWidth(),
+			horizontalAlignment = Alignment.CenterHorizontally
+		) {
 			Text(text = "이미지첨부")
+			Spacer(modifier = Modifier.height(10.dp))
+			AsyncImage(
+				model = ImageRequest.Builder(LocalContext.current)
+					.data(image)
+					.crossfade(true)
+					.build(),
+				contentDescription = null,
+				contentScale = ContentScale.Crop,
+				modifier = Modifier
+					.fillMaxSize(0.5f)
+					.clip(shape = RoundedCornerShape(15.dp))
+					.combinedClickable(
+						onClick = { launcher.launch("image/*") },
+						onLongClick = { showMenu = true },
+					)
+			)
+			Spacer(modifier = Modifier.height(10.dp))
 			Box(modifier = Modifier.fillMaxWidth()) {
 				Row(
 					modifier = Modifier.fillMaxWidth(),
@@ -118,7 +189,7 @@ fun ColumnScope.OrderChoiceOptions(
 				) {
 					Button(
 						modifier = Modifier.weight(1f),
-						onClick = { /* Do something! */ },
+						onClick = { launcher.launch("image/*") },
 						colors = ButtonDefaults.textButtonColors(
 							backgroundColor = Color.White,
 						)
@@ -131,7 +202,7 @@ fun ColumnScope.OrderChoiceOptions(
 					}
 					Button(
 						modifier = Modifier.weight(1f),
-						onClick = { /* Do something! */ },
+						onClick = { launcher.launch("image/*") },
 						colors = ButtonDefaults.textButtonColors(
 							backgroundColor = Color.White
 						)
@@ -144,15 +215,23 @@ fun ColumnScope.OrderChoiceOptions(
 					}
 				}
 			}
+
+			PopupMenu(
+				item = "삭제",
+				onClickCallbacks = {onImageRemoved(null)},
+				showMenu = showMenu,
+				onDismiss = { showMenu = false }
+			)
 		}
+
 	}
 }
 
 @Composable
 fun OrderChoiceDetail(
-	optionName: String, options: List<Pair<String, Int>>?
+	optionName: String, options: List<Pair<String, Int>>?,
+	onPriceChanged: (Int) -> Unit
 ) {
-
 	Column(
 		modifier = Modifier.fillMaxWidth()
 	) {
@@ -164,7 +243,8 @@ fun OrderChoiceDetail(
 		options?.onEach {
 			OrderChoiceDetailBody(
 				optionDetail = it.first,
-				optionPrice = it.second
+				optionPrice = it.second,
+				onPriceChanged = onPriceChanged
 			)
 		}
 	}
@@ -172,7 +252,9 @@ fun OrderChoiceDetail(
 
 @Composable
 fun OrderChoiceDetailBody(
-	optionDetail: String, optionPrice: Int
+	optionDetail: String,
+	optionPrice: Int,
+	onPriceChanged: (Int) -> Unit
 ) {
 
 	val checkedState = remember { mutableStateOf(false) }
@@ -183,7 +265,12 @@ fun OrderChoiceDetailBody(
 		verticalAlignment = Alignment.CenterVertically
 	) {
 		Row(verticalAlignment = Alignment.CenterVertically) {
-			Checkbox(checked = checkedState.value, onCheckedChange = { checkedState.value = it })
+			Checkbox(
+				checked = checkedState.value,
+				onCheckedChange = {
+					checkedState.value = it
+					onPriceChanged(if(it) optionPrice else -optionPrice)
+				})
 			Text(text = optionDetail, fontWeight = FontWeight.Bold)
 		}
 		Text(text = "$optionPrice 원", fontWeight = FontWeight.Bold)
@@ -193,7 +280,7 @@ fun OrderChoiceDetailBody(
 
 @Composable
 fun FloatingOrderBar(
-	finalPrice: Int = 777
+	finalPrice: Int
 ) {
 	Button(
 		modifier = Modifier.fillMaxWidth(0.9f),
@@ -218,6 +305,25 @@ fun ColumnScope.DivideLine() {
 			.background(Color(0xff78BBFA))
 	)
 	Spacer(modifier = Modifier.height(10.dp))
+}
+
+
+@Composable
+fun PopupMenu(
+	item: String,
+	onClickCallbacks: () -> Unit,
+	showMenu: Boolean,
+	onDismiss: () -> Unit,
+) {
+	DropdownMenu(
+		expanded = showMenu,
+		onDismissRequest = { onDismiss() },
+	) {
+		DropdownMenuItem(onClick = {
+			onDismiss()
+			onClickCallbacks()
+		}) { Text(text = item) }
+	}
 }
 
 @Preview
