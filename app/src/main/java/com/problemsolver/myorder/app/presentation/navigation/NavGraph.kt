@@ -5,6 +5,7 @@ import androidx.compose.material.Text
 import androidx.compose.ui.unit.sp
 import androidx.navigation.*
 import androidx.navigation.compose.composable
+import com.problemsolver.myorder.app.presentation.OrderCheck.OrderCheckScreen
 import com.problemsolver.myorder.app.presentation.SplashScreen
 import com.problemsolver.myorder.app.presentation.StoreDetail.StoreDetailScreen
 import com.problemsolver.myorder.app.presentation.StoreList.StoreListScreen
@@ -58,7 +59,7 @@ private fun NavGraphBuilder.MainNavGraph(
 		Text("ProfileScreen", fontSize = 48.sp)
 	}
 	composable(route = Screen.OrderCheckScreen.route) {
-		Text("OrderCheckScreen", fontSize = 48.sp)
+		OrderCheckScreen()
 	}
 
 }
