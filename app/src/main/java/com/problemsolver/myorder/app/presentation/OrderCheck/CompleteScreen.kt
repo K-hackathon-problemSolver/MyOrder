@@ -5,5 +5,5 @@ import androidx.compose.runtime.Composable
 
 @Composable
 fun CompleteScreen(){
-    Text(text = "4")
+
 }

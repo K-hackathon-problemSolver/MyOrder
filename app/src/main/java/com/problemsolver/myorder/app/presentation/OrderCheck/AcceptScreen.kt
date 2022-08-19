@@ -5,5 +5,5 @@ import androidx.compose.runtime.Composable
 
 @Composable
 fun AcceptScreen(){
-    Text(text = "2")
+    
 }
