@@ -99,6 +99,7 @@ dependencies {
 
     // fcm
     implementation 'com.google.firebase:firebase-messaging:23.0.7'
+    implementation "org.jetbrains.kotlin:kotlin-reflect:1.7.0"
 }
 
 apply plugin: 'com.google.gms.google-services'

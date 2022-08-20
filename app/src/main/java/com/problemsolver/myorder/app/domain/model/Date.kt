@@ -1,4 +1,4 @@
-package com.problemsolver.myorder.app.presentation.postDemand
+package com.problemsolver.myorder.app.domain.model
 
 data class Date(
 	var year: Int = 0,

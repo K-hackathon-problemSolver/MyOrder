@@ -6,17 +6,14 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.google.android.datatransport.runtime.Destination
 import com.problemsolver.myorder.app.domain.use_cases.GetStoreDetail
 import com.problemsolver.myorder.app.domain.util.Resource
 import com.problemsolver.myorder.app.domain.util.log
 import com.problemsolver.myorder.app.presentation.navigation.DetailDestinationKey
-import com.problemsolver.myorder.app.presentation.postDemand.Date
+import com.problemsolver.myorder.app.domain.model.Date
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
-import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 
