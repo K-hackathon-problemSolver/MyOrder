@@ -3,6 +3,7 @@ package com.problemsolver.myorder.app.presentation.StoreDetail
 import android.app.DatePickerDialog
 import android.net.Uri
 import android.widget.DatePicker
+import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.*
@@ -20,17 +21,20 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.google.gson.Gson
 import com.problemsolver.myorder.R
 import com.problemsolver.myorder.app.domain.model.Options
 import com.problemsolver.myorder.app.domain.util.log
+import com.problemsolver.myorder.app.presentation.navigation.Screen
 import java.util.*
 
 @Composable
 fun PostDemandScreen(
-	viewModel: StoreDetailViewModel
+	viewModel: StoreDetailViewModel,
+	navController: NavController
 ) {
 	// 서버의 test db가 아직 <Options> 를 serialized 한 내용이 아니므로 하드코딩함
 	val test = Options()
@@ -41,11 +45,17 @@ fun PostDemandScreen(
 	test.data.put("문구", null)
 	val testOption = Gson().toJson(test)
 
-	viewModel.option.value.log()
 
 	Scaffold(
 		floatingActionButton = {
-			FloatingOrderBar(viewModel.price.value)
+			FloatingOrderBar(
+				viewModel.price.value,
+				onClick = {
+					navController.navigate(Screen.HomeScreen.route) {
+						popUpTo(0)
+					}
+				}
+			)
 		},
 		floatingActionButtonPosition = FabPosition.Center,
 		modifier = Modifier
@@ -280,11 +290,12 @@ fun OrderChoiceDetailBody(
 
 @Composable
 fun FloatingOrderBar(
-	finalPrice: Int
+	finalPrice: Int,
+	onClick: () -> Unit
 ) {
 	Button(
 		modifier = Modifier.fillMaxWidth(0.9f),
-		onClick = { /*TODO*/ },
+		onClick = onClick,
 		colors = ButtonDefaults.buttonColors(
 			backgroundColor = Color(0xff78C3FA)
 		)

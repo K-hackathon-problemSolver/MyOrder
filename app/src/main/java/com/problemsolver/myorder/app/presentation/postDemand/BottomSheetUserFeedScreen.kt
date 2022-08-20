@@ -14,6 +14,7 @@ import kotlinx.coroutines.CoroutineScope
 @Composable
 fun BottomSheetScreen(
 	viewModel: StoreDetailViewModel,
+	navController: NavController,
 	activityContentScope: @Composable (state: ModalBottomSheetState, scope: CoroutineScope) -> Unit,
 ){
 	val state = rememberModalBottomSheetState(
@@ -28,7 +29,8 @@ fun BottomSheetScreen(
 		sheetState = state,
 		sheetContent = {
 			PostDemandScreen(
-				viewModel = viewModel
+				viewModel = viewModel,
+				navController = navController
 			)
 		}
 	) {
