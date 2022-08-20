@@ -1,6 +1,5 @@
 package com.problemsolver.myorder.app.presentation.OrderCheck
 
-import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -9,8 +8,6 @@ import androidx.compose.material.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.Color.Companion.White
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.HorizontalPager
@@ -43,26 +40,16 @@ fun OrderCheckScreen(
                 }
             })
         }) {
-                HorizontalPager(count = TabPage.values().size,
-                state = pagerState) { index ->
+                HorizontalPager(
+                    count = TabPage.values().size,
+                    state = pagerState
+                ) { index ->
                     Column(modifier = Modifier.fillMaxSize()) {
                         when (index) {
-                            0 -> {
-                                viewModel.onTypeChanged(OrderType.WAITING)
-                                WaitScreen()
-                            }
-                            1 -> {
-                                viewModel.onTypeChanged(OrderType.ACCEPTED)
-                                AcceptScreen()
-                            }
-                            2 -> {
-                                viewModel.onTypeChanged(OrderType.REJECTED)
-                                RejectScreen()
-                            }
-                            3 -> {
-                                viewModel.onTypeChanged(OrderType.COMPLETED)
-                                CompleteScreen()
-                            }
+                            0 -> { WaitScreen() }
+                            1 -> { AcceptScreen() }
+                            2 -> { RejectScreen() }
+                            3 -> { CompleteScreen() }
                         }
                     }
                 }
@@ -79,7 +66,10 @@ enum class TabPage(val pageName: String){
 }
 
 @Composable
-fun TopTab(selectedTabIndex:Int, onSelectedTab : (TabPage) -> Unit){
+fun TopTab(
+    selectedTabIndex:Int,
+    onSelectedTab : (TabPage) -> Unit
+){
     TabRow(selectedTabIndex = selectedTabIndex,
         backgroundColor = Color.White) {
         TabPage.values().forEachIndexed { index, tabPage ->
@@ -94,8 +84,8 @@ fun TopTab(selectedTabIndex:Int, onSelectedTab : (TabPage) -> Unit){
     }
 }
 
-@Preview
-@Composable
-fun prqsss(){
-    OrderCheckScreen()
-}
+//@Preview
+//@Composable
+//fun prqsss(){
+//    OrderCheckScreen()
+//}
