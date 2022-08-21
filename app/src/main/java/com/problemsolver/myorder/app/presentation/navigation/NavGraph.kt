@@ -69,17 +69,17 @@ private fun NavGraphBuilder.MainNavGraph(
 ){
 	// nav bar routes
 	composable(route = Screen.StoreListScreen.route) {
-//		StoreListScreen(
-//			onStoreClick = { id -> onStoreClick(id, it) }
-//		)
-		BossStoreDetailScreen(navController)
+		StoreListScreen(
+			onStoreClick = { id -> onStoreClick(id, it) }
+		)
+//		BossStoreDetailScreen(navController)
 	}
 	composable(route = Screen.ProfileScreen.route) {
 		Text("ProfileScreen", fontSize = 48.sp)
 	}
 	composable(route = Screen.OrderCheckScreen.route) {
-		OrderCheckScreen()
-//		CustomerOrderCheckScreen()
+//		OrderCheckScreen()
+		CustomerOrderCheckScreen()
 	}
 
 }
