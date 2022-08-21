@@ -24,6 +24,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.NavController
 import com.problemsolver.myorder.R
 import com.problemsolver.myorder.app.presentation.StoreList.StoreItemImage
 import coil.compose.AsyncImage
@@ -37,12 +38,14 @@ import kotlinx.coroutines.launch
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun StoreDetailScreen(
+	navController: NavController,
 	viewModel: StoreDetailViewModel = hiltViewModel()
 ) {
 	if (viewModel.state.value.isLoading) "LOADING!!".log()
 	else {
 		BottomSheetScreen(
-			viewModel = viewModel
+			viewModel = viewModel,
+			navController = navController
 		) { state, scope ->
 
 			LazyVerticalGrid(

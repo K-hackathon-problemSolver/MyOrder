@@ -8,6 +8,9 @@ sealed class Screen(val route: String) {
     object OrderCheckScreen: Screen("home/orderCheck")
     object StoreDetailScreen: Screen("store_detail")
     object PostDemandScreen: Screen("post_demand")
+    object CustomerOrderCheck: Screen("customer_order_check")
+    object OrderCheck: Screen("order_check")
+    object SelectScreen: Screen("select_screen")
 }
 
 object DetailDestinationKey{

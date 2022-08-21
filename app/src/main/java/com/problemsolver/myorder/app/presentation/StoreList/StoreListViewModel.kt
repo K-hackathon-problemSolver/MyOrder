@@ -1,14 +1,18 @@
 package com.problemsolver.myorder.app.presentation.StoreList
 
 import android.util.Log
+import androidx.compose.foundation.lazy.LazyListState
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.problemsolver.myorder.app.domain.use_cases.GetStoreList
 import com.problemsolver.myorder.app.domain.util.Resource
 import com.problemsolver.myorder.app.domain.util.log
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import javax.inject.Inject
