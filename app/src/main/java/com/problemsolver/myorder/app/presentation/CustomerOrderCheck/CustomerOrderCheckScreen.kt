@@ -76,7 +76,7 @@ fun CustomerOrderCheckScreen(
 		}
 	}
 	if(viewModel.isVisible.value)
-		CustomerOCDScreen { viewModel.onCancel() }
+		CustomerOCDScreen(onCancel = {viewModel.onCancel()})
 }
 
 
@@ -84,8 +84,8 @@ fun CustomerOrderCheckScreen(
 
 @Composable
 fun ColumnScope.CustomOrderCheckList(
-	color : String,
-    optionState: String,
+	color : String = "black",
+    optionState: String = "",
     optionName: String,
     optionOwner: String,
     optionDate: String,
