@@ -43,6 +43,7 @@ class StoreDetailViewModel @Inject constructor(
 
 	init {
 		if (!storeId.isNullOrBlank()) getStoreDetail(storeId!!)
+		else getStoreDetail("2d415dfe-f14a-4a6a-8b0b-1a71e2f8f9e6")
 	}
 
 	private fun getStoreDetail(id: String) {

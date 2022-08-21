@@ -9,7 +9,9 @@ import com.problemsolver.myorder.app.presentation.BossCustomerSelect.BossCustome
 import com.problemsolver.myorder.app.presentation.CustomerOrderAlarm.CustomerOrderAlarmAcceptScreen
 import com.problemsolver.myorder.app.presentation.CustomerOrderCheck.CustomerOrderCheckScreen
 import com.problemsolver.myorder.app.presentation.OrderCheck.OrderCheckScreen
+import com.problemsolver.myorder.app.presentation.OrderChoiceCustom.OrderChoiceCustomScreen
 import com.problemsolver.myorder.app.presentation.SplashScreen
+import com.problemsolver.myorder.app.presentation.StoreDetail.BossStoreDetailScreen
 import com.problemsolver.myorder.app.presentation.StoreDetail.StoreDetailScreen
 import com.problemsolver.myorder.app.presentation.StoreList.StoreListScreen
 
@@ -38,6 +40,9 @@ fun NavGraphBuilder.NavGraph(
 		CustomerOrderAlarmAcceptScreen(navController)
 	}
 
+	composable(Screen.OrderChoiceCustomScreen.route) {
+		OrderChoiceCustomScreen()
+	}
 
 	composable(
 		"${Screen.StoreDetailScreen.route}/{${DetailDestinationKey.STORE}}",
@@ -62,19 +67,19 @@ private fun NavGraphBuilder.MainNavGraph(
 	upPress: () -> Unit,
 	onStoreClick: (String, NavBackStackEntry) -> Unit
 ){
-	
 	// nav bar routes
 	composable(route = Screen.StoreListScreen.route) {
-		StoreListScreen(
-			onStoreClick = { id -> onStoreClick(id, it) }
-		)
+//		StoreListScreen(
+//			onStoreClick = { id -> onStoreClick(id, it) }
+//		)
+		BossStoreDetailScreen(navController)
 	}
 	composable(route = Screen.ProfileScreen.route) {
 		Text("ProfileScreen", fontSize = 48.sp)
 	}
 	composable(route = Screen.OrderCheckScreen.route) {
-//		OrderCheckScreen()
-		CustomerOrderCheckScreen()
+		OrderCheckScreen()
+//		CustomerOrderCheckScreen()
 	}
 
 }
