@@ -51,7 +51,7 @@ fun PostDemandScreen(
 			FloatingOrderBar(
 				viewModel.price.value,
 				onClick = {
-					navController.navigate(Screen.HomeScreen.route) {
+					navController.navigate(Screen.OrderWaitingScreen.route) {
 						popUpTo(0)
 					}
 				}

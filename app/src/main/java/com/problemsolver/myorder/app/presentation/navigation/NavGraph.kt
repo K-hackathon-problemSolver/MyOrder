@@ -6,6 +6,7 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.*
 import androidx.navigation.compose.composable
 import com.problemsolver.myorder.app.presentation.BossCustomerSelect.BossCustomerSelectScreen
+import com.problemsolver.myorder.app.presentation.CustomerOrderAlarm.CustomerOrderAlarmAcceptScreen
 import com.problemsolver.myorder.app.presentation.CustomerOrderCheck.CustomerOrderCheckScreen
 import com.problemsolver.myorder.app.presentation.OrderCheck.OrderCheckScreen
 import com.problemsolver.myorder.app.presentation.SplashScreen
@@ -31,6 +32,10 @@ fun NavGraphBuilder.NavGraph(
 	
 	composable(Screen.SelectScreen.route) {
 		BossCustomerSelectScreen(navController = navController)
+	}
+
+	composable(Screen.OrderWaitingScreen.route) {
+		CustomerOrderAlarmAcceptScreen(navController)
 	}
 
 

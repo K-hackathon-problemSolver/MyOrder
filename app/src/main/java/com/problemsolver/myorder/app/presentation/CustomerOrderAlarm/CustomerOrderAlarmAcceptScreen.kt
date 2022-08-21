@@ -16,15 +16,20 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
+import androidx.navigation.compose.rememberNavController
+import com.problemsolver.myorder.app.presentation.navigation.Screen
 
 @Composable
-fun CustomerOrderAlarmAcceptScreen(){
+fun CustomerOrderAlarmAcceptScreen(
+    navController: NavController = rememberNavController()
+){
     Column(modifier = Modifier
         .fillMaxSize()
         .background(color = Color.White)) {
         Alarmheader()
         AlarmBody()
-        AlarmButton()
+        AlarmButton(onClick = { navController.navigate(Screen.HomeScreen.route) { popUpTo(0)} })
     }
 }
 
@@ -53,18 +58,18 @@ fun ColumnScope.AlarmBody(){
         .weight(7f),
     horizontalAlignment = Alignment.CenterHorizontally) {
         Spacer(modifier = Modifier.height(80.dp))
-        Text(text = "주문 수락",
+        Text(text = "주문 접수",
         fontSize = 30.sp)
         Spacer(modifier = Modifier.height(20.dp))
-        Text(text = "가게에서 주문을 수락하였습니다.",
+        Text(text = "가게에 주문이 접수되었습니다.",
         fontSize = 18.sp)
         Spacer(modifier = Modifier.height(20.dp))
         Text(text = "픽업 날짜를 정확하게 확인해주세요!",
         fontSize = 15.sp,
         color = Color(0xff5F5F5F))
-        Text(text = "예쁘게 준비해드리겠습니다.",
-            fontSize = 15.sp,
-            color = Color(0xff5F5F5F))
+//        Text(text = "",
+//            fontSize = 15.sp,
+//            color = Color(0xff5F5F5F))
         Spacer(modifier = Modifier.height(50.dp))
         Image(modifier = Modifier.fillMaxSize(),
             painter = painterResource(id = com.problemsolver.myorder.R.drawable.box_accept),
@@ -74,24 +79,27 @@ fun ColumnScope.AlarmBody(){
 }
 
 @Composable
-fun ColumnScope.AlarmButton(){
+fun ColumnScope.AlarmButton(
+    onClick: () -> Unit = {}
+){
     Column(modifier = Modifier
         .fillMaxWidth()
         .padding(20.dp)
         .weight(2f)) {
             Button(modifier = Modifier.fillMaxWidth(),
                 colors = ButtonDefaults.buttonColors(backgroundColor = Color(0xff78C3FA)),
-                onClick = { /*TODO*/ }) {
-                Text(text = "주문서 보기",
+                onClick = onClick
+            ) {
+                Text(text = "홈화면 돌아가기",
                 color = Color.White)
             }
 
-            Button(modifier = Modifier.fillMaxWidth(),
-                colors = ButtonDefaults.buttonColors(backgroundColor = Color.White),
-                onClick = { /*TODO*/ }) {
-                Text(text = "홈화면 돌아가기",
-                color = Color(0xff78C3FA))
-            }
+//            Button(modifier = Modifier.fillMaxWidth(),
+//                colors = ButtonDefaults.buttonColors(backgroundColor = Color.White),
+//                onClick = { /*TODO*/ }) {
+//                Text(text = "홈화면 돌아가기",
+//                color = Color(0xff78C3FA))
+//            }
     }
 }
 
