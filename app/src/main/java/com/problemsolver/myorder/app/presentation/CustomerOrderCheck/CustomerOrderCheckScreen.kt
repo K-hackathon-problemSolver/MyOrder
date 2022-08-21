@@ -1,77 +1,110 @@
 package com.problemsolver.myorder.app.presentation.CustomerOrderCheck
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
+import com.problemsolver.myorder.app.presentation.CustomerOrderCheckDetail.CustomerOCDScreen
+
 
 @Composable
-fun CustomerOrderCheckScreen() {
-
+fun CustomerOrderCheckScreen(
+	viewModel: CustomerOrderCheckViewModel = hiltViewModel()
+) {
 	val scrollState = rememberScrollState()
 
-	Column(
-		modifier = Modifier
-            .background(color = Color.White)
-            .padding(20.dp)
-            .verticalScroll(scrollState)
-	) {
-		Spacer(modifier = Modifier.height(20.dp))
-		CustomOrderCheckList(
-			optionState = "접수 대기",
-			optionName = "도시락 케이크",
-			optionOwner = "프롬마틸다",
-			optionDate = "2022.08.22",
-			optionTime = "13:22"
-		)
-		CustomOrderCheckList(
-			optionState = "수락",
-			optionName = "시그니처 케이크",
-			optionOwner = "벌스데이걸 사직",
-			optionDate = "2022.08.20",
-			optionTime = "11:56"
-		)
-		CustomOrderCheckList(
-			optionState = "거절",
-			optionName = "시그니처 케이크",
-			optionOwner = "벌스데이걸 사직",
-			optionDate = "2022.08.20",
-			optionTime = "11:29"
-		)
-		CustomOrderCheckList(
-			optionState = "완료",
-			optionName = "3단 트리플 케이크",
-			optionOwner = "교대 녹는당케이크",
-			optionDate = "2022.06.03",
-			optionTime = "19:34"
-		)
+	Box(modifier = Modifier.fillMaxSize()){
+
+		Column(
+			modifier = Modifier.fillMaxSize()
+				.background(color = Color.White)
+				.padding(20.dp)
+				.verticalScroll(scrollState)
+		) {
+			Spacer(modifier = Modifier.height(20.dp))
+			CustomOrderCheckList(
+				color = "yellow",
+				optionState = "접수 대기",
+				optionName = "도시락 케이크",
+				optionOwner = "프롬마틸다",
+				optionDate = "2022.08.18",
+				optionTime = "13:22",
+				onClick = { viewModel.onDemandClick() }
+			)
+			CustomOrderCheckList(
+				color = "green",
+				optionState = "수락",
+				optionName = "시그니처 케이크",
+				optionOwner = "벌스데이걸 사직",
+				optionDate = "2022.08.20",
+				optionTime = "11:56",
+				onClick = { viewModel.onDemandClick() }
+			)
+			CustomOrderCheckList(
+				color = "red",
+				optionState = "거절",
+				optionName = "시그니처 케이크",
+				optionOwner = "벌스데이걸 사직",
+				optionDate = "2022.08.20",
+				optionTime = "11:29",
+				onClick = { viewModel.onDemandClick() }
+			)
+			CustomOrderCheckList(
+				color = "black",
+				optionState = "완료",
+				optionName = "3단 트리플 케이크",
+				optionOwner = "교대 녹는당케이크",
+				optionDate = "2022.06.03",
+				optionTime = "19:34",
+				onClick = { viewModel.onDemandClick() }
+			)
+		}
 	}
+	if(viewModel.isVisible.value)
+		CustomerOCDScreen { viewModel.onCancel() }
 }
+
+
+
 
 @Composable
 fun ColumnScope.CustomOrderCheckList(
+	color : String,
     optionState: String,
     optionName: String,
     optionOwner: String,
     optionDate: String,
-    optionTime: String
+    optionTime: String,
+	onClick: () -> Unit = {}
 ) {
+	var devideColor = Color.Black
+	var alp = 1f
+
+	if (optionState == "완료") alp = 0.4f
+
     Box(
         modifier = Modifier
-	        .shadow(shape = RoundedCornerShape(8.dp), elevation = 4.dp)
-            .fillMaxWidth()
-	        .background(Color.White)
-            .padding(vertical = 10.dp)
+			.shadow(shape = RoundedCornerShape(8.dp), elevation = 4.dp)
+			.fillMaxWidth()
+			.background(Color.White)
+			.padding(vertical = 10.dp)
+			.clickable(onClick = onClick)
+			.alpha(alp)
     ) {
         Column() {
             Text(
@@ -83,7 +116,18 @@ fun ColumnScope.CustomOrderCheckList(
             )
             Spacer(modifier = Modifier.height(5.dp))
 
-            DevideLine()
+
+			if (color == "yellow")  devideColor = Color.Yellow
+			if (color == "green")  devideColor = Color.Green
+			if (color == "red")  devideColor = Color.Red
+			if (color == "black")  devideColor = Color.Black
+
+			Box(
+				modifier = Modifier
+					.fillMaxWidth()
+					.height(1.dp)
+					.background(color = devideColor)
+			)
 
             Spacer(modifier = Modifier.height(10.dp))
             Text(
@@ -119,15 +163,6 @@ fun ColumnScope.CustomOrderCheckList(
     Spacer(modifier = Modifier.height(20.dp))
 }
 
-@Composable
-fun DevideLine() {
-	Box(
-		modifier = Modifier
-            .fillMaxWidth()
-            .height(1.dp)
-            .background(color = Color(0xffB5B5B5))
-	)
-}
 
 @Preview
 @Composable
