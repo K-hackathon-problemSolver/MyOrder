@@ -5,7 +5,9 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.LazyGridState
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.foundation.lazy.grid.rememberLazyGridState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
@@ -25,18 +27,21 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.navigation.NavController
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.problemsolver.myorder.R
 import com.problemsolver.myorder.app.presentation.util.BitmapConverter.StringToImageBitmap
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.launch
 
 @Composable
 fun StoreListScreen(
-	navController: NavController,
 	onStoreClick: (String) -> Unit,
 	viewModel: StoreListViewModel = hiltViewModel()
 ) {
+
+	val listState = rememberLazyGridState()
+	val coroutineScope = rememberCoroutineScope()
 
 	Column(
 		modifier = Modifier
@@ -48,7 +53,12 @@ fun StoreListScreen(
                 .padding(horizontal = 20.dp, vertical = 10.dp)
                 .fillMaxWidth()
 		) {
-			locationSelector(modifier = Modifier.align(Alignment.CenterStart), { /* TODO */ })
+			locationSelector(
+				modifier = Modifier.align(Alignment.CenterStart),
+				listState = listState,
+				coroutineScope = coroutineScope,
+				onCheckedChange = {}
+			)
 
 			// 임시로 처리
 			Row(modifier = Modifier.align(Alignment.CenterEnd)) {
@@ -67,7 +77,8 @@ fun StoreListScreen(
 		}
 		LazyVerticalGrid(
 			columns = GridCells.Fixed(2),
-			contentPadding = PaddingValues(10.dp)
+			contentPadding = PaddingValues(10.dp),
+			state = listState
 		) {
 			viewModel.state.value.storeList.onEach {
 				item {
@@ -88,12 +99,15 @@ fun StoreListScreen(
 @Composable
 fun locationSelector(
 	modifier: Modifier = Modifier,
+	listState: LazyGridState,
 	onCheckedChange: () -> Unit,
+	coroutineScope: CoroutineScope,
 	viewModel: StoreListViewModel = hiltViewModel()
 ) {
 	val categoryList = listOf("SUYUNG", "GUMJUNG", "DONGLAE")
 	var isDropDownMenuExpanded by remember { mutableStateOf(false) }
 	var selectedText by remember { mutableStateOf("지역 선택") }
+
 
 	Row(modifier = modifier) {
 		Text(
@@ -126,9 +140,13 @@ fun locationSelector(
 					DropdownMenuItem(
 						modifier = Modifier.width(200.dp),
 						onClick = {
+							coroutineScope.launch {
+								listState.animateScrollToItem(index = 0)
+							}
 							selectedText = categoryList.get(it)
 							isDropDownMenuExpanded = false
 							viewModel.changeLocation(categoryList.get(it))
+
 						},
 						contentPadding = PaddingValues(horizontal = 20.dp)
 					) {

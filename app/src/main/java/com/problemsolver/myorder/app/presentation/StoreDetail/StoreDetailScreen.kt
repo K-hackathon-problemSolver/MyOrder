@@ -1,15 +1,14 @@
 package com.problemsolver.myorder.app.presentation.StoreDetail
 
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.GridItemSpan
-import androidx.compose.foundation.lazy.grid.LazyGridScope
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowDropDown
 import androidx.compose.material.icons.filled.KeyboardArrowDown
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -20,65 +19,75 @@ import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.lifecycle.SavedStateHandle
 import androidx.navigation.NavController
-import androidx.navigation.compose.rememberNavController
 import com.problemsolver.myorder.R
 import com.problemsolver.myorder.app.presentation.StoreList.StoreItemImage
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.problemsolver.myorder.app.domain.util.log
-import com.problemsolver.myorder.app.presentation.StoreList.StoreItemAsyncImage
+import com.problemsolver.myorder.app.presentation.postDemand.BottomSheetScreen
 import com.problemsolver.myorder.app.presentation.util.BitmapConverter
 import com.problemsolver.myorder.app.presentation.util.BitmapConverter.StringToImageBitmap
+import kotlinx.coroutines.launch
 
+@OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun StoreDetailScreen(
 	navController: NavController,
-	upPress: () -> Unit = {},
-	storeId: String,
 	viewModel: StoreDetailViewModel = hiltViewModel()
 ) {
-
-	viewModel.state.value.storeDetail.toString().log()
-	viewModel.state.value.toString().log()
-
-	if(viewModel.state.value.isLoading) "LOADING!!".log()
+	if (viewModel.state.value.isLoading) "LOADING!!".log()
 	else {
-		LazyVerticalGrid(
-			columns = GridCells.Fixed(count = 2),
-			contentPadding = PaddingValues(20.dp),
-			modifier = Modifier.background(Color.White)
-		) {
-			val storeDetail = viewModel.state.value.storeDetail
-			storeDetail.toString().log()
+		BottomSheetScreen(
+			viewModel = viewModel,
+			navController = navController
+		) { state, scope ->
 
-			item(span = { GridItemSpan(2) }) {
-				Column() {
-					val bitmap = StringToImageBitmap(storeDetail.mainImg!!)
-					StoreDetailMainPic(bitmap = bitmap)
-					StoreDetailDescription(
-						title = storeDetail.name!!,
-						content = storeDetail.description!!
-					)
-					Spacer(modifier = Modifier.height(10.dp))
-					DevideLine()
-					StoreDetailList()
+			LazyVerticalGrid(
+				columns = GridCells.Fixed(count = 2),
+				contentPadding = PaddingValues(20.dp),
+				modifier = Modifier.background(Color.White)
+			) {
+				val storeDetail = viewModel.state.value.storeDetail
+				storeDetail.toString().log()
 
+				item(span = { GridItemSpan(2) }) {
+					Column() {
+						val bitmap = StringToImageBitmap(storeDetail.mainImg!!)
+						StoreDetailMainPic(bitmap = bitmap)
+						StoreDetailDescription(
+							title = storeDetail.name!!,
+							content = storeDetail.description!!
+						)
+						Spacer(modifier = Modifier.height(10.dp))
+						DivideLine()
+						StoreDetailList()
+
+					}
 				}
-			}
 
-			viewModel.state.value.storeDetail.cakeList?.forEach {
-				item {
-					StoreDetailOption(
-						optionName = it.option,
-						image = it.img,
-						price = it.minPrice,
-					)
+				viewModel.state.value.storeDetail.cakeList?.forEach {
+					item {
+						StoreDetailOption(
+							optionName = it.name,
+							image = it.img,
+							description = it.description,
+							price = it.minPrice,
+						) {
+							viewModel.onEvent(StoreDetailEvent.clickCake(it.uuid, it.option))
+							scope.launch {
+								state.animateTo(
+									ModalBottomSheetValue.Expanded,
+									tween(500)
+								)
+							}
+						}
+					}
 				}
 			}
 		}
@@ -93,7 +102,7 @@ fun StoreDetailMainPic(
 	modifier: Modifier = Modifier
 ) {
 	Image(
-		bitmap = (if(bitmap != null) bitmap else R.drawable.sample_cake) as ImageBitmap,
+		bitmap = (if (bitmap != null) bitmap else R.drawable.sample_cake) as ImageBitmap,
 		contentDescription = title,
 		contentScale = ContentScale.Crop,
 		modifier = modifier
@@ -183,7 +192,7 @@ fun timeSelector(
 }
 
 @Composable
-fun DevideLine() {
+fun DivideLine() {
 	Box(
 		modifier = Modifier
 			.fillMaxWidth()
@@ -202,18 +211,22 @@ fun StoreDetailList() {
 
 @Composable
 fun StoreDetailOption(
+	modifier: Modifier = Modifier.padding(10.dp),
 	optionName: String,
+	description: String,
 	image: String,
 	price: Int,
-	modifier: Modifier = Modifier.padding(10.dp)
+	onClick: () -> Unit = {}
 ) {
-	Column(modifier = modifier) {
+	Column(modifier = modifier.clickable(onClick = onClick)) {
 		var bitmap = BitmapConverter.StringToImageBitmap(image)
 		StoreItemImage(bitmap!!, optionName)
 		Spacer(modifier = Modifier.size(5.dp))
-		Text(text = optionName, fontSize = 16.sp)
+		Text(text = optionName, fontSize = 16.sp, fontWeight = FontWeight.Bold)
 		Spacer(modifier = Modifier.size(5.dp))
-		Text(text = price.toString(), fontSize = 16.sp)
+		Text(text = description, fontSize = 14.sp)
+		Spacer(modifier = Modifier.size(5.dp))
+		Text(text = "$price 원~", fontSize = 14.sp, fontWeight = FontWeight.Bold)
 		Spacer(modifier = Modifier.size(20.dp))
 	}
 }
