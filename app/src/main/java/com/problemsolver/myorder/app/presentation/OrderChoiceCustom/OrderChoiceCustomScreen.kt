@@ -6,6 +6,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
@@ -55,7 +56,7 @@ fun OrderChoiceCustomScreen(
 			CustomTopBar()
 
 			LazyColumn(
-				modifier = Modifier.background(Color(0xFFD8D6D6))
+				modifier = Modifier.background(Color.White)
 			) {
 				viewModel.categories.forEachIndexed { categoryIdx, category ->
 					item {
@@ -68,8 +69,11 @@ fun OrderChoiceCustomScreen(
 								horizontalArrangement = Arrangement.SpaceAround
 							){
 								Text("카테고리 명")
-								TextField(
+								Spacer(modifier = Modifier.width(10.dp))
+								TextField(modifier = Modifier.height(30.dp),
+									colors = TextFieldDefaults.textFieldColors(backgroundColor = Color.White),
 									value = category.categoryName,
+									shape = RoundedCornerShape(8.dp),
 									onValueChange = {
 										viewModel.onCategoryNameChanged(
 											it,
@@ -78,9 +82,13 @@ fun OrderChoiceCustomScreen(
 									}
 								)
 							}
+							Spacer(modifier = Modifier.height(10.dp))
 							category.options.forEachIndexed { optionIndex, option ->
 								Row(
-									modifier = Modifier.fillMaxWidth(),
+									modifier = Modifier
+										.fillMaxWidth()
+										.padding(bottom = 10.dp)
+										.padding(horizontal = 10.dp),
 									verticalAlignment = Alignment.CenterVertically
 								){
 									Row(
@@ -100,9 +108,12 @@ fun OrderChoiceCustomScreen(
 													optionIndex
 												)
 											},
-											modifier = Modifier.fillMaxWidth()
+											modifier = Modifier
+												.fillMaxWidth()
+												.height(20.dp)
 										)
 									}
+									Spacer(modifier = Modifier.width(10.dp))
 									Row(
 										modifier = Modifier.weight(2f),
 										verticalAlignment = Alignment.CenterVertically
@@ -122,7 +133,9 @@ fun OrderChoiceCustomScreen(
 												)
 											},
 											keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
-											modifier = Modifier.width(100.dp)
+											modifier = Modifier
+												.width(100.dp)
+												.height(10.dp)
 										)
 									}
 									Image(
@@ -136,12 +149,13 @@ fun OrderChoiceCustomScreen(
 									)
 								}
 							}
+							Spacer(modifier = Modifier.height(10.dp))
 
 							Row(Modifier.fillMaxWidth(0.9f)) {
 								Button(
 									modifier = Modifier.weight(1f),
 									onClick = { viewModel.addOption(categoryIdx) },
-									colors = ButtonDefaults.buttonColors(backgroundColor = Color(0xFF9B9B9B)
+									colors = ButtonDefaults.buttonColors(backgroundColor = Color(0xFF78C3FA)
 									)
 								) {
 									Text(
@@ -153,7 +167,7 @@ fun OrderChoiceCustomScreen(
 								Button(
 									modifier = Modifier.weight(1f),
 									onClick = { viewModel.removeCategory(categoryIdx) },
-									colors = ButtonDefaults.buttonColors(backgroundColor = Color(0xFF9B9B9B)
+									colors = ButtonDefaults.buttonColors(backgroundColor = Color(0xFF78C3FA)
 									)
 								) {
 									Text(
@@ -162,11 +176,12 @@ fun OrderChoiceCustomScreen(
 									)
 								}
 							}
-
+							Spacer(modifier = Modifier.height(10.dp))
 
 
 
 						}
+
 					}
 				}
 			}
