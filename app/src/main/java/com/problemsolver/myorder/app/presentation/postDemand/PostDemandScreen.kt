@@ -3,7 +3,6 @@ package com.problemsolver.myorder.app.presentation.StoreDetail
 import android.app.DatePickerDialog
 import android.net.Uri
 import android.widget.DatePicker
-import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.*
@@ -68,7 +67,8 @@ fun PostDemandScreen(
 			modifier = Modifier.fillMaxSize()
 		) {
 			OrderChoiceHeader(
-				onDateChanged = { y, m, d -> viewModel.onEvent(StoreDetailEvent.dateChanged(y, m, d)) }
+				onDateChanged = { y, m, d -> viewModel.onEvent(StoreDetailEvent.dateChanged(y, m, d)) },
+				date =  viewModel.date.value
 			)
 			OrderChoiceOptions(
 				image = viewModel.imageUri.value,
@@ -83,7 +83,8 @@ fun PostDemandScreen(
 
 @Composable
 fun ColumnScope.OrderChoiceHeader(
-	onDateChanged: (Int, Int, Int) -> Unit
+	onDateChanged: (Int, Int, Int) -> Unit,
+	date: com.problemsolver.myorder.app.domain.model.Date
 ) {
 	val mYear: Int
 	val mMonth: Int
@@ -99,9 +100,9 @@ fun ColumnScope.OrderChoiceHeader(
 
 	val mDatePickerDialog = DatePickerDialog(
 		LocalContext.current,
-		{ _: DatePicker, mYear: Int, mMonth: Int, mDayOfMonth: Int ->
-			onDateChanged(mYear, mMonth, mDayOfMonth)
-			mDate.value = "$mYear 년 $mMonth 월 $mDay 일 ▼"
+		{ _: DatePicker, year: Int, month: Int, day: Int ->
+			onDateChanged(year, month, day)
+			mDate.value = "${date.year}년 ${date.month+1}월 ${date.day}일 ▼"
 		}, mYear, mMonth, mDay
 	)
 
