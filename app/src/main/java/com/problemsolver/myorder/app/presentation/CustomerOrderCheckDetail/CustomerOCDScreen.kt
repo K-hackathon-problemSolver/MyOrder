@@ -17,12 +17,8 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-<<<<<<< HEAD
-import androidx.compose.ui.zIndex
 import com.problemsolver.myorder.R
 import com.problemsolver.myorder.app.presentation.StoreDetail.*
-=======
->>>>>>> bug-fix
 
 
 @Composable
