@@ -11,6 +11,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
@@ -37,14 +38,16 @@ fun CustomerOrderCheckScreen(
 		) {
 			Spacer(modifier = Modifier.height(20.dp))
 			CustomOrderCheckList(
+				color = "yellow",
 				optionState = "접수 대기",
 				optionName = "도시락 케이크",
 				optionOwner = "프롬마틸다",
-				optionDate = "2022.08.22",
+				optionDate = "2022.08.18",
 				optionTime = "13:22",
 				onClick = { viewModel.onDemandClick() }
 			)
 			CustomOrderCheckList(
+				color = "green",
 				optionState = "수락",
 				optionName = "시그니처 케이크",
 				optionOwner = "벌스데이걸 사직",
@@ -53,6 +56,7 @@ fun CustomerOrderCheckScreen(
 				onClick = { viewModel.onDemandClick() }
 			)
 			CustomOrderCheckList(
+				color = "red",
 				optionState = "거절",
 				optionName = "시그니처 케이크",
 				optionOwner = "벌스데이걸 사직",
@@ -61,6 +65,7 @@ fun CustomerOrderCheckScreen(
 				onClick = { viewModel.onDemandClick() }
 			)
 			CustomOrderCheckList(
+				color = "black",
 				optionState = "완료",
 				optionName = "3단 트리플 케이크",
 				optionOwner = "교대 녹는당케이크",
@@ -79,6 +84,7 @@ fun CustomerOrderCheckScreen(
 
 @Composable
 fun ColumnScope.CustomOrderCheckList(
+	color : String,
     optionState: String,
     optionName: String,
     optionOwner: String,
@@ -86,6 +92,11 @@ fun ColumnScope.CustomOrderCheckList(
     optionTime: String,
 	onClick: () -> Unit = {}
 ) {
+	var devideColor = Color.Black
+	var alp = 1f
+
+	if (optionState == "완료") alp = 0.4f
+
     Box(
         modifier = Modifier
 			.shadow(shape = RoundedCornerShape(8.dp), elevation = 4.dp)
@@ -93,6 +104,7 @@ fun ColumnScope.CustomOrderCheckList(
 			.background(Color.White)
 			.padding(vertical = 10.dp)
 			.clickable(onClick = onClick)
+			.alpha(alp)
     ) {
         Column() {
             Text(
@@ -104,7 +116,18 @@ fun ColumnScope.CustomOrderCheckList(
             )
             Spacer(modifier = Modifier.height(5.dp))
 
-            DevideLine()
+
+			if (color == "yellow")  devideColor = Color.Yellow
+			if (color == "green")  devideColor = Color.Green
+			if (color == "red")  devideColor = Color.Red
+			if (color == "black")  devideColor = Color.Black
+
+			Box(
+				modifier = Modifier
+					.fillMaxWidth()
+					.height(1.dp)
+					.background(color = devideColor)
+			)
 
             Spacer(modifier = Modifier.height(10.dp))
             Text(
@@ -140,15 +163,6 @@ fun ColumnScope.CustomOrderCheckList(
     Spacer(modifier = Modifier.height(20.dp))
 }
 
-@Composable
-fun DevideLine() {
-	Box(
-		modifier = Modifier
-            .fillMaxWidth()
-            .height(1.dp)
-            .background(color = Color(0xffB5B5B5))
-	)
-}
 
 @Preview
 @Composable

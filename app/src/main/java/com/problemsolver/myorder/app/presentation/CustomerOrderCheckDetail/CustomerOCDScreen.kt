@@ -40,7 +40,6 @@ fun CustomerOCDScreen (
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(30.dp)
-                .background(color = Color(0x33939393))
         ) {
 
             Column(
@@ -123,7 +122,7 @@ fun ColumnScope.CustomerOrderPrice(){
         horizontalArrangement = Arrangement.SpaceBetween,
     ) {
         Text(text = "금액")
-        Text(text = "36,000원",
+        Text(text = "11,100원",
         fontSize = 25.sp,
         fontWeight = FontWeight.Bold)
     }
