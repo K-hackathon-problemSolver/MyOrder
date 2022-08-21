@@ -1,8 +1,11 @@
 package com.problemsolver.myorder.app.presentation.OrderChoiceCustom
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
+import androidx.compose.runtime.mutableStateListOf
+import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.lifecycle.ViewModel
+import com.problemsolver.myorder.app.domain.model.Category
+import com.problemsolver.myorder.app.domain.model.Option
+import com.problemsolver.myorder.app.domain.util.log
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 
@@ -11,19 +14,54 @@ class OrderChoiceCustomViewModel @Inject constructor(
 
 ) :ViewModel() {
 
-    var _todoItems = MutableLiveData(listOf<Data>())
-    val todoItem : LiveData<List<Data>> = _todoItems
+	private var _categories = mutableStateListOf(Category())
+	val categories: SnapshotStateList<Category> = _categories
 
+	fun addCategory(category: Category) {
+		_categories.add(category)
+	}
 
+	fun addOption(index: Int) {
+		val options = categories[index].getOptionList()
+		options.add(Option())
+		_categories[index] = categories[index].copy(options = options)
+		_categories.add(Category())
+		_categories.removeLast()
+	}
 
-    fun addItem(item:Data){
-        _todoItems.value=_todoItems.value!!+ listOf(item)
-    }
+	fun removeOption(categoryIdx: Int, optionIndex: Int) {
+		val options = categories[categoryIdx].getOptionList()
+		options.removeAt(optionIndex)
+		_categories[categoryIdx] = categories[categoryIdx].copy(options = options)
+		_categories.add(Category())
+		_categories.removeLast()
+	}
 
-    fun removeItem(item:Data){
-        _todoItems.value=_todoItems.value!!.toMutableList().also {
-            it.remove(item)
-        }
-    }
+	fun onCategoryNameChanged(name: String, index: Int) {
+		_categories[index] = categories[index].copy(
+			categoryName = name
+		)
+	}
+
+	fun onOptionChanged(name: String, categoryIdx: Int, optionIndex: Int) {
+		val options = categories[categoryIdx].getOptionList()
+		options[optionIndex].detail = name
+		_categories[categoryIdx] = categories[categoryIdx].copy(options = options)
+		_categories.add(Category())
+		_categories.removeLast()
+
+	}
+
+	fun onPriceChanged(price: Int?, categoryIdx: Int, optionIndex: Int) {
+		val options = categories[categoryIdx].getOptionList()
+		options[optionIndex].price = price
+		_categories[categoryIdx] = categories[categoryIdx].copy(options = options)
+		_categories.add(Category())
+		_categories.removeLast()
+	}
+
+	fun removeCategory(categoryIdx: Int) {
+		_categories.removeAt(categoryIdx)
+	}
 
 }
