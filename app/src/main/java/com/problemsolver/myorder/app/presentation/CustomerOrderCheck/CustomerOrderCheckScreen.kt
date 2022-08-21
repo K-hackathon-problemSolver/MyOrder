@@ -38,15 +38,15 @@ fun CustomerOrderCheckScreen(
 		) {
 			Spacer(modifier = Modifier.height(20.dp))
 			CustomOrderCheckList(
-				color = "yellow",
-				optionState = "접수 대기",
+				color = "green",
+				optionState = "수락",
 				optionName = "도시락 케이크",
 				optionOwner = "프롬마틸다",
-				optionDate = "2022.08.18",
+				optionDate = "2022.08.20",
 				optionTime = "13:22",
 				onClick = { viewModel.onDemandClick() }
 			)
-			CustomOrderCheckList(
+			/*CustomOrderCheckList(
 				color = "green",
 				optionState = "수락",
 				optionName = "시그니처 케이크",
@@ -55,6 +55,7 @@ fun CustomerOrderCheckScreen(
 				optionTime = "11:56",
 				onClick = { viewModel.onDemandClick() }
 			)
+			 */
 			CustomOrderCheckList(
 				color = "red",
 				optionState = "거절",
@@ -117,7 +118,7 @@ fun ColumnScope.CustomOrderCheckList(
             Spacer(modifier = Modifier.height(5.dp))
 
 
-			if (color == "yellow")  devideColor = Color.Yellow
+			if (color == "yellow")  devideColor = Color(0xff78C3FA)
 			if (color == "green")  devideColor = Color.Green
 			if (color == "red")  devideColor = Color.Red
 			if (color == "black")  devideColor = Color.Black

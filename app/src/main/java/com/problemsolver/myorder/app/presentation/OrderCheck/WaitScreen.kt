@@ -73,7 +73,7 @@ fun WaitScreen(){
             CustomerOCDScreen(onCancel = {
                 isVisible.value = false
                 isVisible2.value = false
-                Toast.makeText(mContext, "홍유준님의 주문이 수락되었습니다", Toast.LENGTH_LONG).show()
+                Toast.makeText(mContext, "진윤정님의 주문이 수락되었습니다", Toast.LENGTH_LONG).show()
             }, isStore = true)
         }
     }

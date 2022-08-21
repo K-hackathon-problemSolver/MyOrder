@@ -23,6 +23,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.zIndex
+import com.problemsolver.myorder.R
 import com.problemsolver.myorder.app.presentation.StoreDetail.*
 
 
@@ -115,7 +116,9 @@ fun ColumnScope.CustomerOrderDetail(){
     Column(modifier = Modifier
         .fillMaxWidth()
         .height(270.dp)
-        .verticalScroll(scrollState)) {
+        .verticalScroll(scrollState),
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
         OrderDetail(optionName ="주문일시" , optionDetail = "2022-08-20")
         OrderDetail(optionName = "픽업일시", optionDetail = "2022-08-24")
         OrderDetail(optionName = "디자인", optionDetail = "시그니처 케이크")
@@ -125,6 +128,12 @@ fun ColumnScope.CustomerOrderDetail(){
         OrderDetail(optionName = "문구", optionDetail = "축하해")
         OrderDetail(optionName = "요청사항", optionDetail = "문구 크게 써주세요")
         OrderDetail(optionName = "이미지", optionDetail = "")
+        Image(
+            painter = painterResource(id = R.drawable.finalcake),
+            contentDescription = "",
+            modifier = Modifier.size(200.dp)
+        )
+        Spacer(modifier = Modifier.size(30.dp))
         //이미지 받아와서 표시
     }
 }

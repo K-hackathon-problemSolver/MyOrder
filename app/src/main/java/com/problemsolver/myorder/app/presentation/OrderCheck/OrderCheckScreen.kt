@@ -78,7 +78,7 @@ fun TopTab(
                 selected = index == selectedTabIndex,
                 onClick = { onSelectedTab(tabPage) },
                 text = { Text(text = tabPage.name)},
-                selectedContentColor = Color.Black,
+                selectedContentColor = Color(0xFF78C3FA),
                 unselectedContentColor = Color(0xffBBBBBB)
             )
         }

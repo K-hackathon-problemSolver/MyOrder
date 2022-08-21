@@ -105,7 +105,7 @@ fun OrderChoiceCustomScreen(
 									) {
 										Text(
 											text = "옵션 명",
-											modifier = Modifier.width(50.dp)
+											modifier = Modifier.width(60.dp)
 										)
 										TextField(
 											value = option.detail,
