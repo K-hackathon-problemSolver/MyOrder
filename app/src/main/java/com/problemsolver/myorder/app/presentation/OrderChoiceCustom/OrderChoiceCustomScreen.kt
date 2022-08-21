@@ -28,6 +28,7 @@ import com.problemsolver.myorder.app.domain.model.Category
 
 @Composable
 fun OrderChoiceCustomScreen(
+	upPress: () -> Unit = {},
 	viewModel: OrderChoiceCustomViewModel = hiltViewModel()
 ) {
 
@@ -52,7 +53,7 @@ fun OrderChoiceCustomScreen(
 				.background(color = Color.White)
 		) {
 
-			CustomTopBar()
+			CustomTopBar(upPress = upPress)
 
 			LazyColumn(
 				modifier = Modifier.background(Color.White)
@@ -65,12 +66,20 @@ fun OrderChoiceCustomScreen(
 						) {
 							Row(
 								verticalAlignment = Alignment.CenterVertically,
-								horizontalArrangement = Arrangement.SpaceAround
+								horizontalArrangement = Arrangement.SpaceAround,
+								modifier = Modifier.padding(horizontal = 10.dp)
+									.padding(bottom = 10.dp)
 							){
 								Text("카테고리 명")
 								Spacer(modifier = Modifier.width(10.dp))
-								TextField(modifier = Modifier.height(30.dp),
-									colors = TextFieldDefaults.textFieldColors(backgroundColor = Color.White),
+								TextField(
+									modifier = Modifier,
+									colors = TextFieldDefaults.textFieldColors(
+										backgroundColor = Color.White,
+										cursorColor = Color(0xFF78C3FA),
+										focusedIndicatorColor = Color(0xFF78C3FA),
+										textColor = Color.Black
+									),
 									value = category.categoryName,
 									shape = RoundedCornerShape(8.dp),
 									onValueChange = {
@@ -98,7 +107,7 @@ fun OrderChoiceCustomScreen(
 											text = "옵션 명",
 											modifier = Modifier.width(50.dp)
 										)
-										OutlinedTextField(
+										TextField(
 											value = option.detail,
 											onValueChange = {
 												viewModel.onOptionChanged(
@@ -107,9 +116,14 @@ fun OrderChoiceCustomScreen(
 													optionIndex
 												)
 											},
+											colors = TextFieldDefaults.textFieldColors(
+												backgroundColor = Color.White,
+												cursorColor = Color(0xFF78C3FA),
+												focusedIndicatorColor = Color(0xFF78C3FA),
+												textColor = Color.Black
+											),
 											modifier = Modifier
 												.fillMaxWidth()
-												.height(20.dp)
 										)
 									}
 									Spacer(modifier = Modifier.width(10.dp))
@@ -122,7 +136,7 @@ fun OrderChoiceCustomScreen(
 											modifier = Modifier.width(50.dp)
 										)
 										var text = remember { mutableStateOf("") }
-										OutlinedTextField(
+										TextField(
 											value = if(option.price != null) option.price.toString() else "" ,
 											onValueChange = {
 												viewModel.onPriceChanged(
@@ -131,10 +145,15 @@ fun OrderChoiceCustomScreen(
 													optionIndex
 												)
 											},
+											colors = TextFieldDefaults.textFieldColors(
+												backgroundColor = Color.White,
+												cursorColor = Color(0xFF78C3FA),
+												focusedIndicatorColor = Color(0xFF78C3FA),
+												textColor = Color.Black
+											),
 											keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
 											modifier = Modifier
 												.width(100.dp)
-												.height(10.dp)
 										)
 									}
 									Image(

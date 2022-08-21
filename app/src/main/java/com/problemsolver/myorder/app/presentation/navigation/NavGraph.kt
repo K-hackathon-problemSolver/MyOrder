@@ -41,7 +41,7 @@ fun NavGraphBuilder.NavGraph(
 	}
 
 	composable(Screen.OrderChoiceCustomScreen.route) {
-		OrderChoiceCustomScreen()
+		OrderChoiceCustomScreen(upPress)
 	}
 
 	composable(
