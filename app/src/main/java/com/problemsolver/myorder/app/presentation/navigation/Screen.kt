@@ -11,6 +11,10 @@ sealed class Screen(val route: String) {
     object CustomerOrderCheck: Screen("customer_order_check")
     object OrderCheck: Screen("order_check")
     object SelectScreen: Screen("select_screen")
+    object OrderWaitingScreen: Screen("order_waiting_screen")
+    object BossStoreDetail: Screen("boss_store_detail")
+    object OrderChoiceCustomScreen: Screen("order_choice_customer")
+
 }
 
 object DetailDestinationKey{

@@ -25,7 +25,6 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.problemsolver.myorder.R
 import com.problemsolver.myorder.app.domain.model.Category
-import com.problemsolver.myorder.app.domain.model.Option
 
 @Composable
 fun OrderChoiceCustomScreen(

@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.Button
 import androidx.compose.material.ButtonDefaults
@@ -14,6 +15,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
+import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
@@ -26,7 +28,8 @@ import com.problemsolver.myorder.app.presentation.StoreDetail.*
 
 @Composable
 fun CustomerOCDScreen (
-    onCancel: () -> Unit = {}
+    onCancel: () -> Unit = {},
+    isStore: Boolean = false
 ) {
 
 
@@ -34,6 +37,7 @@ fun CustomerOCDScreen (
         Column(modifier = Modifier
             .fillMaxSize()
             //.fillMaxWidth().height(570.dp)
+            .shadow(shape = RoundedCornerShape(4.dp), clip = true, elevation = 3.dp)
             .background(color = Color(0x33939393))) {
         }
         Column(
@@ -57,11 +61,36 @@ fun CustomerOCDScreen (
 
             Spacer(modifier = Modifier.height(15.dp))
 
-            Button(modifier = Modifier.fillMaxWidth(),
-                elevation = ButtonDefaults.elevation(2.dp),
-                colors = ButtonDefaults.buttonColors(backgroundColor = Color.White),
-                onClick = onCancel) {
-                Text(text = "닫기")
+            if(isStore){
+                Row(Modifier.fillMaxWidth()) {
+                    Button(
+                        modifier = Modifier.weight(1f),
+                        elevation = ButtonDefaults.elevation(2.dp),
+                        colors = ButtonDefaults.buttonColors(backgroundColor = Color.White),
+                        onClick = onCancel
+                    ) {
+                        Text(text = "닫기", fontWeight = FontWeight.Bold)
+                    }
+                    Spacer(modifier = Modifier.size(10.dp))
+                    Button(
+                        modifier = Modifier.weight(1f),
+                        elevation = ButtonDefaults.elevation(2.dp),
+                        colors = ButtonDefaults.buttonColors(backgroundColor = Color(0xFF78C3FA)),
+                        onClick = onCancel
+                    ) {
+                        Text(text = "수락", fontWeight = FontWeight.Bold, color = Color.White)
+                    }
+                }
+            }
+            else {
+                Button(
+                    modifier = Modifier.fillMaxWidth(),
+                    elevation = ButtonDefaults.elevation(2.dp),
+                    colors = ButtonDefaults.buttonColors(backgroundColor = Color.White),
+                    onClick = onCancel
+                ) {
+                    Text(text = "닫기",fontWeight = FontWeight.Bold)
+                }
             }
         }
     }
