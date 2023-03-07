@@ -60,6 +60,16 @@
 - `Dagger-Hilt`
 
 
+## 🛠 Backend 사용 기술 키워드
+- `spring`
+- `JPA`
+- `AWS EC2`
+- `maria DB`
+- `JWT`
+- `lombok`, `jjwt`, `jackson`
+- `spring security`
+
+
 ## 팀원
 - 진윤정 (기획자) (팀장)
 - 홍유준 (android), Github: [@Kick-snare](https://github.com/kick-snare)
