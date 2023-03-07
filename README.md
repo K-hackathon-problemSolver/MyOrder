@@ -63,6 +63,7 @@
 ## 🛠 Backend 사용 기술 키워드
 - `spring`
 - `spring security`
+- `JUnit5`
 - `JPA`
 - `AWS EC2`
 - `maria DB`
