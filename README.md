@@ -62,12 +62,13 @@
 
 ## 🛠 Backend 사용 기술 키워드
 - `spring`
+- `spring security`
 - `JPA`
 - `AWS EC2`
 - `maria DB`
 - `JWT`
 - `lombok`, `jjwt`, `jackson`
-- `spring security`
+
 
 
 ## 팀원
